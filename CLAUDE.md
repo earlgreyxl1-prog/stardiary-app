@@ -121,6 +121,17 @@ src/
   - `package.json`의 `overrides`로 node-gyp를 12.4 이상으로 올려 둔다(패키지 기본 node-gyp 10은 VS 2026을 못 찾는다).
   - 패키지가 VS 2022 툴셋(`v143`)을 고정해 쓰므로, Build Tools 2026에 **MSVC v143 개별 구성 요소**도 설치돼 있어야 한다.
 
+## 저장소 (git)
+
+- 2026-10-17 시작. 첫 커밋 `4e2d492`(main). 원격 저장소는 아직 없다(GitHub 등에 올릴지 미정).
+- 커밋 작성자는 이 저장소에만 설정했다(`git config user.name earlgreyxl1`, `user.email (개인 메일)`). 전역 git 설정은 건드리지 않았다.
+- 작업은 브랜치에서 하고 main에 합친다. 커밋·푸시는 사용자가 요청할 때만 한다.
+- 포함하는 것: 소스, `scripts/`, `docs/`, `.claude/launch.json`, 생성 데이터 `data/world-cities.geonames.json`(약 23MB, 사용자 결정: 배포·다른 PC에서 바로 동작하도록 커밋). 데이터를 다시 만들 때마다 저장소가 약 23MB씩 커지므로 자주 다시 만들지 않는다.
+- 빼는 것(`.gitignore`): `node_modules`, `.next`, `.env*`, `*.pem`, `*.tsbuildinfo`, `next-env.d.ts`, `/.claude/settings.local.json`(개인 권한 설정).
+- `.gitattributes`: 줄바꿈을 LF로 통일한다. 생성 데이터(`data/*.json`, `docs/element-distribution.json`)는 diff로 보여 주지 않는다.
+- `AGENTS.md`는 `next dev`가 다시 써 넣는 파일이다. 내용이 바뀌어도 그대로 커밋한다.
+- `src/content/freeStage.ts`(+ `src/types/content.ts`)는 무료 단계 해석 문구 **AI 초안**이다(임시). 작가 납품본으로 바꿀 때 `origin`을 `'writer'`로 바꾼다.
+
 ## 검증 절차 (변경 후 매번)
 
 1. `npx tsc --noEmit`
