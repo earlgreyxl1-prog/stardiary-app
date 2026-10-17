@@ -4,7 +4,8 @@ import type { FreeStageContent } from '@/types/content';
  * 무료 단계 해석 문구 — **AI 초안(임시)**. 점성술 작가 납품본으로 교체하기 전까지 시뮬레이션·화면 확인용으로 쓴다.
  * - 의뢰서 기준: 해요체, 제목 8~16자, 해석 70~95자(2~3문장), 키워드 3개(각 2~7자),
  *   원소 코멘트 강한 편 40~60자 · 적은 편 35~55자 · 균형형 60~90자 (공백·문장부호 포함).
- * - 어떤 원소 코멘트를 언제 보여줄지(적은 편, 균형형, 동점)는 아직 정해지지 않았다. CLAUDE.md 8번 참고.
+ * - 어떤 원소 코멘트를 언제 보여줄지는 lib/astro/elements의 commentPlan이 정한다(CLAUDE.md 5번). 적은 편 코멘트가 제목과 겹치는 문제는 작가 납품본에서 고친다(docs/content-brief-elements.md).
+ * - 납품본은 scripts/convert-content.ts로 이 파일을 덮어써서 넣는다.
  * - 작가 납품 후에는 이 파일을 납품본으로 바꾸고 `origin`을 'writer'로 바꾼다.
  */
 export const FREE_STAGE_CONTENT: FreeStageContent = {

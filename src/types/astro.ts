@@ -168,17 +168,44 @@ export interface Placement {
   keywords: string[];
 }
 
+/** 원소 하나와 그 원소의 코멘트 문구 */
+export interface ElementCommentText {
+  element: ElementId;
+  text: string;
+}
+
 /**
- * 1단계 무료 결과. 실제 계산 엔진으로 바꿔도 이 타입은 그대로 쓴다.
+ * 결과 화면의 원소 코멘트 (ElementCommentPlan에 문구를 채운 것).
+ * - balanced: 균형형 코멘트 하나만
+ * - leaning: 강한 편(동점이면 elements가 여럿, 코멘트는 하나) + 적은 편 0~3개(여럿이면 차례로 이어 붙인다)
+ */
+export type ElementSummaryView =
+  | { kind: 'balanced'; text: string }
+  | {
+      kind: 'leaning';
+      strong: { elements: ElementId[]; comment: ElementCommentText };
+      lacking: ElementCommentText[];
+    };
+
+export interface ElementSummary {
+  /** 표시용 정수 %. 동점 원소를 같게 맞추느라 합이 99일 수 있다 (ElementBalance.percentages) */
+  percentages: Record<ElementId, number>;
+  view: ElementSummaryView;
+  /** 출생 시간을 몰라 계산에서 빠진 지점. 비어 있지 않으면 화면에 안내한다. */
+  excluded: Array<'ascendant' | 'midheaven'>;
+}
+
+/**
+ * 1단계 무료 결과. 목업이든 실제 계산이든 lib/summary/buildChartSummary로 만든다.
+ * - source: 'mock'이면 입력과 무관한 예시 결과라고 화면에 안내한다.
+ * - contentOrigin: 해석 문구 출처. 'ai-draft'면 작가 검수 전 임시 문구라고 안내한다.
  * - rising: 출생 시간을 모르면 계산할 수 없으므로 null
- * - elements: 각 원소의 비중(정수 %). 동점 원소를 같게 맞추느라 합이 99일 수 있다 (ElementBalance.percentages)
  */
 export interface ChartSummary {
   source: 'mock' | 'computed';
+  contentOrigin: 'ai-draft' | 'writer';
   sun: Placement;
   moon: Placement;
   rising: Placement | null;
-  elements: Record<ElementId, number>;
-  dominantElement: ElementId;
-  elementComment: string;
+  elements: ElementSummary;
 }

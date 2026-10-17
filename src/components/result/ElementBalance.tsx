@@ -1,19 +1,26 @@
 'use client';
 
+import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ELEMENTS, ELEMENT_BY_ID } from '@/lib/astro/zodiac';
-import type { ElementId } from '@/types/astro';
+import { Clock } from 'lucide-react';
+import { ELEMENTS } from '@/lib/astro/zodiac';
+import { elementTitles } from '@/lib/summary/elementTitles';
+import type { ElementSummary } from '@/types/astro';
 
 interface ElementBalanceProps {
-  elements: Record<ElementId, number>;
-  dominant: ElementId;
-  comment: string;
+  summary: ElementSummary;
 }
 
-/** 4원소(불/흙/바람/물) 비중을 막대로 보여준다. */
-export function ElementBalance({ elements, dominant, comment }: ElementBalanceProps) {
+const COMMENT_BOX = 'rounded-2xl bg-white/5 p-4';
+
+/**
+ * 4원소(불/흙/바람/물) 비중 막대와 코멘트.
+ * 코멘트 구성은 summary.view가 정한다: 균형형 하나 / 강한 편(동점이면 제목에 여럿) + 적은 편 0~3개.
+ */
+export function ElementBalance({ summary }: ElementBalanceProps) {
   const reduceMotion = useReducedMotion();
-  const dominantMeta = ELEMENT_BY_ID[dominant];
+  const { percentages, view, excluded } = summary;
+  const titles = elementTitles(view);
 
   return (
     <section
@@ -23,17 +30,10 @@ export function ElementBalance({ elements, dominant, comment }: ElementBalancePr
       <h2 id="element-title" className="text-lg font-bold text-white">
         나의 4원소 밸런스
       </h2>
-      <p className="mt-1 text-sm text-indigo-200/80">
-        가장 강한 원소는{' '}
-        <strong className="font-bold text-[#ffe9a8]">
-          {dominantMeta.emoji} {dominantMeta.nameKo}
-        </strong>
-        이에요.
-      </p>
 
       <ul className="mt-5 space-y-3.5">
         {ELEMENTS.map((element, index) => {
-          const percent = elements[element.id];
+          const percent = percentages[element.id];
           return (
             <li key={element.id} className="flex items-center gap-3">
               <span className="w-14 shrink-0 text-sm text-indigo-100">
@@ -61,7 +61,42 @@ export function ElementBalance({ elements, dominant, comment }: ElementBalancePr
         })}
       </ul>
 
-      <p className="mt-5 rounded-2xl bg-white/5 p-4 text-sm leading-relaxed text-indigo-100">{comment}</p>
+      <div className="mt-5 space-y-3">
+        <div className={COMMENT_BOX}>
+          <p className="text-sm font-bold text-[#ffe9a8]">{titles.main}</p>
+          <p className="mt-1.5 text-sm leading-relaxed text-indigo-100">
+            {view.kind === 'balanced' ? view.text : view.strong.comment.text}
+          </p>
+        </div>
+
+        {view.kind === 'leaning' && titles.lacking && (
+          <div className={COMMENT_BOX}>
+            <p className="text-sm font-bold text-[#ffc6e0]">{titles.lacking}</p>
+            <div className="mt-1.5 space-y-2">
+              {view.lacking.map((comment) => (
+                <p key={comment.element} className="text-sm leading-relaxed text-indigo-100">
+                  {comment.text}
+                </p>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {excluded.length > 0 && (
+        <div className="mt-4 flex gap-2 text-xs leading-relaxed text-indigo-200/70">
+          <Clock className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
+          <p>
+            출생 시간을 몰라서 상승궁과 천정(MC)은 빼고 계산했어요. 시간을 알면 비율이 조금 달라질 수 있어요.{' '}
+            <Link
+              href="/onboarding?step=time"
+              className="font-medium text-indigo-100 underline decoration-white/30 underline-offset-2 hover:text-white"
+            >
+              출생 시간 입력하기
+            </Link>
+          </p>
+        </div>
+      )}
     </section>
   );
 }

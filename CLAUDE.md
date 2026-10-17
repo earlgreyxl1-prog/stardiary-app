@@ -61,7 +61,7 @@ src/
 └─ types/                     birth(BirthInput 등), city
 ```
 
-추가됨: `app/result/`, `components/result/`(PlacementCard, LockedRisingCard, ElementBalance, ResultStates, ResultView), `components/ui/MotionProvider`, `hooks/useChartResult`, `hooks/useSavedBirthInput`, `services/chartService`, `lib/astro/zodiac`(별자리·원소 사전 데이터), `mocks/chart`, `types/astro`(ChartSummary, NatalPositions 등), `app/api/chart/route.ts`, `lib/astro/engine`(서버 전용), `lib/astro/time`, `lib/birthGuards`(타입 가드 + 서버용 범위 검증), `lib/astro/elements`, `lib/astro/houses`, `app/api/geocode/route.ts`, `lib/geo/citySearch`(서버 전용 도시 검색 인덱스), `types/geonames`, `components/onboarding/GeoNamesAttribution`(출처 표기). 프로젝트 루트 `data/world-cities.geonames.json`(GeoNames 가공 데이터, 약 20MB, 생성물). `scripts/`(시뮬레이션·데이터 가공 스크립트), `docs/`(분포 보고서, 작가 안내).
+추가됨: `app/result/`, `components/result/`(PlacementCard, LockedRisingCard, ElementBalance, ResultStates, ResultView), `components/ui/MotionProvider`, `hooks/useChartResult`, `hooks/useSavedBirthInput`, `services/chartService`, `lib/astro/zodiac`(별자리·원소 사전 데이터), `mocks/chart`, `types/astro`(ChartSummary, NatalPositions 등), `app/api/chart/route.ts`, `lib/astro/engine`(서버 전용), `lib/astro/time`, `lib/birthGuards`(타입 가드 + 서버용 범위 검증), `lib/astro/elements`, `lib/astro/houses`, `app/api/geocode/route.ts`, `lib/geo/citySearch`(서버 전용 도시 검색 인덱스), `types/geonames`, `components/onboarding/GeoNamesAttribution`(출처 표기). 프로젝트 루트 `data/world-cities.geonames.json`(GeoNames 가공 데이터, 약 20MB, 생성물). `scripts/`(시뮬레이션·데이터 가공 스크립트), `docs/`(분포 보고서, 작가 안내). 결과 화면 구조(2026-10-18): `lib/summary/buildChartSummary`·`elementTitles`, `lib/content/`(rules·csv·convertContent), `lib/text/korean`(조사), `content/freeStage`(해석 문구, 지금은 AI 초안), `types/content`, `scripts/convert-content.ts`.
 
 ### 서비스 전체 목표 구조 (1·2단계 포함, `*`는 아직 없음)
 
@@ -106,6 +106,14 @@ src/
   - 태양/달/상승궁 뒤집기 카드, 4원소 막대, `timeUnknown`이면 상승궁 잠금 카드
   - 레이아웃은 세로로 쌓인 카드로 확정했다(2026-10-17 사용자 결정). 좌우 스와이프 카드 뉴스로 바꾸지 않는다.
   - 결과 값은 입력과 무관한 고정 목업(`mocks/chart.ts`)이고, 화면 상단에 "미리보기용 예시 결과" 안내가 뜬다(`source: 'mock'`).
+- 완료 (2026-10-18): **결과 화면 구조** — 작가 납품 즉시 실제 계산으로 바꿀 수 있게 준비했다.
+  - `ChartSummary` = `source` + `contentOrigin`('ai-draft' | 'writer') + 태양/달/상승궁 `Placement`(별자리·도수 + 해석 문구) + `elements: ElementSummary`(`percentages`, `view`, `excluded`). 예전 `elementComment`(문자열 하나)·`dominantElement`는 없앴다.
+  - `ElementSummaryView`: `{ kind: 'balanced', text }` 또는 `{ kind: 'leaning', strong: { elements, comment }, lacking: [{ element, text }…] }`. `toElementSummaryView`가 `commentPlan`에 문구를 채운다.
+  - 조립은 한 곳: `buildChartSummary({ source, bigThree, balance, content })`. 목업도 실제 계산과 같은 경로(`computeElementBalanceFromSigns` → `buildChartSummary`)를 지난다. 실제 연결 때는 `/api/chart`의 `positions`(태양·달·상승궁)와 `elementBalance`를 넘기기만 하면 된다.
+  - 원소 UI(`ElementBalance`): 제목은 서비스 템플릿(`elementTitles`, 조사는 `lib/text/korean`) — "가장 강한 원소는 💧 물이에요" / "🔥 불과 🌿 흙이 똑같이 강해요" / "🌿 흙, 🍃 바람과 💧 물이 적은 편이에요" / "네 원소가 고르게 섞여 있어요". 적은 편 코멘트는 차례로 이어 붙인다. 시간 모름이면 "상승궁과 천정(MC)은 빼고 계산했어요" 안내 + `/onboarding?step=time` 링크.
+  - 상단 안내(`PreviewNotice`): 목업이면 "미리보기용 예시 결과", 실제 계산이지만 문구가 AI 초안이면 "해석 문구는 검수 전 임시 문구". 둘 다 아니면 숨는다.
+  - **목업 장면 (개발용 닉네임)**: `!balanced`(균형형), `!tie`(불·흙 동점, 태양이 있는 흙 코멘트, 물 적음), `!lacking0`(적은 편 없음), `!lacking3`(적은 편 3개), 그 밖은 기본(물 강함·바람 적음). 출생 시간 모름으로 입력하면 상승궁·MC를 빼고 계산한다. `!error`는 그대로 에러 화면.
+  - 브라우저 확인(375px): 다섯 장면 + 시간 모름 모두 의도대로, 가로 넘침·콘솔 오류 없음. AI 초안의 적은 편 코멘트가 제목("○○이 적은 편이에요")을 되풀이해 이어 붙이면 반복처럼 보이는 문제를 찾아 작가 안내(`docs/content-brief-elements.md`)에 "제목과 겹치지 않게"를 추가했다.
 - 완료: `/onboarding` 재방문 시 저장된 값으로 폼을 채운다. `?step=time`처럼 단계를 지정해 들어올 수 있다(상승궁 잠금 카드의 링크가 사용). URL 해시는 클라이언트 이동 시 첫 렌더 뒤에 반영되므로 쓰지 않는다.
 - `prefers-reduced-motion`: CSS 애니메이션은 `globals.css`, framer-motion은 `MotionProvider`(`MotionConfig reducedMotion="user"`)가 처리한다.
 - 완료 (2026-10-17): **계산 어댑터 + `POST /api/chart`** (Swiss Ephemeris). 아직 결과 화면에는 연결하지 않았다(미결정 7·8 보류 중).
@@ -136,11 +144,14 @@ src/
 
 - 실행: `npm test`(한 번) / `npm run test:watch`(감시). 설정은 `vitest.config.mts`: `@/` 별칭, `server-only`를 빈 모듈(`test/stubs/server-only.ts`)로 바꿔 서버 코드를 Node에서 직접 테스트한다. 테스트 파일은 `src/**/*.test.ts`(대상 파일 옆).
 - `@types/node`를 ^24로 올렸다(vitest 5가 22 이상을 요구, 실제 Node도 24).
-- 범위 (339개):
+- 범위 (374개, 결과 화면 구조 작업으로 35개 추가):
   - `lib/astro/elements.test.ts` — 가중치표, 사용자 예시 차트(15.5점), 시간 모름(12점), 정수 %·동점, 코멘트 규칙(균형형·강한 편 동점 양방향·적은 편 없음/0점 동점/한 원소 100%·정확한 비율 비교)
   - `lib/astro/houses.test.ts` — 하우스 판정(0° 경계·시작선), 인터셉션(사용자 예시), 엔진 통합(Placidus, 일출·정오·자정 태양 하우스, 트롬쇠·남극 Porphyry, 시간 모름 null), 위치 회귀(서울 1995 태양·ASC, 춘분일 ambiguousSigns, 수성 역행)
   - `lib/astro/time.test.ts` — 한국 UTC+9 / 서머타임 +10 / +8:30, 없는 시각 보정, 뉴욕·시드니·카트만두(+5:45), 잘못된 타임존 오류 문구
   - `lib/geo/citySearch.test.ts` — 정규화, 순위 규칙(작은 가짜 데이터), 실제 데이터 검색(서울·파리·트롬쇠·용인시·중구·신설 구·읍면동·옛 지명), 국내 항목 한글 이름·타임존
+  - `lib/summary/buildChartSummary.test.ts` — 목업 장면별 상태, 문구 조립, 시간 모름, 제목 템플릿(조사 포함), `getChartSummary`(가짜 타이머)
+  - `lib/content/convertContent.test.ts` — CSV(따옴표·줄바꿈·BOM), 시트 → 문구 왕복(원본과 동일), 영문 머리글·키워드 3칸, AI 행 거부, 누락·알 수 없는·중복 키, 글자 수·키워드 수·제목 금지어, 지금 문구(AI 초안)가 규칙 오류 0
+  - `lib/text/korean.test.ts` — 받침 판별, 조사, 'A, B와 C' 잇기
   - `lib/geo/koreaCoverage.test.ts` — **국내 행정구역 전수 회귀**: 시·군·구 230 + 일반구 39 + 시·도 17을 실제 데이터로 검색. 도시 데이터를 다시 만들면 반드시 돌린다. 행정구역이 바뀌면 이 파일의 목록도 고친다.
 - 테스트가 잡는지 확인: 수성 가중치 1.5 → 1, Placidus 한계 66° → 70°로 바꾸면 각각 실패하는 것을 확인했다.
 - 엔진(swisseph)·도시 데이터를 직접 읽는 통합 테스트라 `node_modules`의 swisseph 빌드와 `data/world-cities.geonames.json`이 있어야 한다.
@@ -227,7 +238,10 @@ src/
    - 결정(2026-10-17): **무료 단계 문구는 점성술 작가에게 의뢰한다.** 의뢰서와 입력 시트 초안을 만들어 두었다(아래). 계약 조건(저작권 양도/이용 허락, 수정 횟수, 작업비, 작가의 생성형 AI 사용 범위)은 아직 협의 전이다.
    - 톤·글자 수는 의뢰서 초안 기준이며 서비스가 최종 확정한 값은 아니다: 해요체, 제목 8~16자, 해석 70~95자(2~3문장), 키워드 3개(각 2~7자), 원소 코멘트는 강한 편 40~60자·적은 편 35~55자·균형형 60~90자. 길이는 `PlacementCard`(카드 높이 고정)와 기존 목업 문구를 재서 정했다. 제목에는 별자리 이름과 '당신'을 쓰지 않는다. 태양·달·상승궁이 같은 별자리여도 카드마다 다른 각도로 쓴다.
    - 산출물: 의뢰서 "점성술 해석 문구 작가 의뢰서 (무료 단계)"(Claude 문서, 비공개)와 입력 시트 `stardiary-content-input.xlsx`(작가 전달용이라 저장소에는 넣지 않는다). 시트의 키는 `sun.{sign}`, `moon.{sign}`, `rising.{sign}`, `element.{fire|earth|air|water}.dominant`, `element.{…}.lacking`, `element.balanced`이고 `{sign}`은 `ZodiacSignId`와 같다.
-   - 제안(미확정): 납품된 시트를 `content/` 폴더의 타입이 있는 파일로 바꿔 코드와 함께 버전 관리한다. 변환 스크립트는 글자 수 범위를 검사하고, `출처`가 "AI"로 시작하는 행(시트에 `sun.leo`, `element.fire.dominant` 두 줄이 AI 예시로 들어 있다)이 남아 있으면 거부한다. 개발 초기에는 CMS를 붙이지 않는다.
+   - ✅ 납품 → 코드 반영 경로 (2026-10-18 구현): 시트를 **CSV(UTF-8)로 내보내** `scripts/convert-content.ts`로 `src/content/freeStage.ts`를 만든다(xlsx 파서 의존성을 두지 않으려고 CSV로 받는다). 실제 시트 파일은 저장소·작업 폴더에서 찾지 못해 머리글을 유연하게 받게 했다(키 / 제목 / 해석 / 키워드(쉼표) 또는 키워드1~3 / 코멘트 / 출처, 영문 가능). 실제 시트를 받으면 먼저 검사만 돌려 머리글이 맞는지 본다.
+     - `npx --yes tsx scripts/convert-content.ts <시트.csv>` → 검사만(오류·경고 목록). `--out src/content/freeStage.ts`를 붙이면 오류가 없을 때만 덮어쓴다(origin 'writer').
+     - 오류(변환 막음): 45개 키 누락·알 수 없는 키·중복, 출처가 'AI'로 시작하는 행, 빈 칸, 글자 수(`lib/content/rules.ts`), 키워드 3개·각 2~7자, 제목에 별자리 이름·2자 이상 어간·'당신'. 경고: 해석 2~3문장 아님, 원소 코멘트의 '가장'·'압도적'·'부족' 등, 숫자·%.
+     - 개발 초기에는 CMS를 붙이지 않는다.
    - 무료 단계 분량: **45개** = 태양·달·상승궁 × 12별자리 36개 + 4원소 '강한 편' 4개 + '상대적으로 적은 편' 4개 + '균형형' 1개. (이전 "약 46개"는 추정치였다.) `/result`를 실제 계산과 연결하기 전에 납품을 받아야 한다.
    - ✅ 원소 코멘트를 고르는 규칙은 5번에서 결정·구현했다(2026-10-17). 근거: `docs/element-distribution.md` (실제 엔진, 1950~2025년생·GeoNames 236,278개 도시 인구 비례 포함 4개 시나리오 × 시간 앎/모름 = 40만 차트. 시나리오·위도대별 결과가 1%p 안팎으로 같다).
    - **작가 안내 규칙 (원소 코멘트, 2026-10-17)**: 작가에게 전달할 문안은 `docs/content-brief-elements.md`. 의뢰서(Claude 문서)와 입력 시트에는 아직 반영하지 않았다 → 두 곳에 옮겨야 한다. 요점:
@@ -248,6 +262,6 @@ src/
 
 ## 다음 작업 후보
 
-- 작가 납품(8번) 후: `chartService.getChartSummary()`가 `/api/chart`를 호출하고, `positions` + `elementBalance` + 해석 문구로 `ChartSummary`를 만든다 (`source: 'computed'`). 이때 `ElementBalance` UI를 `commentPlan`에 맞춰 바꾼다(균형형 / 강한 편 동점 제목 / 적은 편 0~3개). 시간 모름(`excluded`) 안내도 추가한다. `ChartSummary`의 `elementComment`(문자열 하나)는 이 구조를 담지 못하므로 함께 바꾼다.
+- 작가 납품(8번) 후: 시트를 `scripts/convert-content.ts`로 변환하고, `chartService.getChartSummary()`가 `/api/chart`를 호출해 `positions`(태양·달·상승궁)와 `elementBalance`를 `buildChartSummary`에 넘기도록 바꾼다(`source: 'computed'`). 화면 구조는 이미 준비돼 있다(2026-10-18).
 - 결과 카드 공유(이미지 저장) 기능
 - 2단계 유료 리포트(`/report`): 네이탈 휠 차트, 12하우스, 애스펙트

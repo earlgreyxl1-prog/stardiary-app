@@ -67,11 +67,25 @@ export function ResultEmpty() {
   );
 }
 
-/** 목업 데이터임을 화면에 분명히 표시한다. 실제 계산으로 바뀌면 렌더링되지 않는다. */
-export function MockNotice() {
+interface PreviewNoticeProps {
+  /** 결과가 입력과 무관한 예시인지 */
+  mock: boolean;
+  /** 해석 문구가 작가 검수 전 임시 문구인지 */
+  draftContent: boolean;
+}
+
+/**
+ * 아직 정식 결과가 아니라는 안내. 목업 결과이거나 해석 문구가 AI 초안이면 보여준다.
+ * 실제 계산 + 작가 납품 문구가 되면 렌더링되지 않는다.
+ */
+export function PreviewNotice({ mock, draftContent }: PreviewNoticeProps) {
+  if (!mock && !draftContent) return null;
+  const message = mock
+    ? '🧪 미리보기용 예시 결과예요. 실제 계산 기능이 준비되면 입력한 정보로 정확한 별자리를 보여드려요.'
+    : '🧪 해석 문구는 검수 전 임시 문구예요. 별자리 계산은 입력한 정보로 한 실제 결과예요.';
   return (
     <p className="rounded-2xl border border-[#ffe9a8]/30 bg-[#ffe9a8]/10 px-4 py-3 text-xs leading-relaxed text-[#fff1c7]">
-      🧪 미리보기용 예시 결과예요. 실제 계산 기능이 준비되면 입력한 정보로 정확한 별자리를 보여드려요.
+      {message}
     </p>
   );
 }

@@ -5,7 +5,7 @@ import { Mascot } from '@/components/onboarding/Mascot';
 import { ElementBalance } from '@/components/result/ElementBalance';
 import { LockedRisingCard } from '@/components/result/LockedRisingCard';
 import { PlacementCard } from '@/components/result/PlacementCard';
-import { BackToOnboardingLink, MockNotice } from '@/components/result/ResultStates';
+import { BackToOnboardingLink, PreviewNotice } from '@/components/result/ResultStates';
 import { ZODIAC_SIGNS } from '@/lib/astro/zodiac';
 import type { ChartSummary } from '@/types/astro';
 import type { BirthInput } from '@/types/birth';
@@ -44,7 +44,7 @@ export function ResultView({ input, summary }: ResultViewProps) {
         <p className="mt-1 text-sm text-indigo-200/70">{formatBirth(input)}</p>
       </header>
 
-      {summary.source === 'mock' && <MockNotice />}
+      <PreviewNotice mock={summary.source === 'mock'} draftContent={summary.contentOrigin === 'ai-draft'} />
 
       <Mascot message={`${input.nickname}의 하늘에는 ${sunSign.nameKo} 태양이 빛나고 있었어! 카드를 눌러봐.`} />
 
@@ -61,11 +61,7 @@ export function ResultView({ input, summary }: ResultViewProps) {
       </section>
 
       <motion.div {...reveal(3)}>
-        <ElementBalance
-          elements={summary.elements}
-          dominant={summary.dominantElement}
-          comment={summary.elementComment}
-        />
+        <ElementBalance summary={summary.elements} />
       </motion.div>
 
       <div className="flex justify-center pt-2">

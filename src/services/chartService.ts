@@ -1,5 +1,9 @@
-import { CHART_SUMMARY_MOCK } from '@/mocks/chart';
-import type { ChartSummary } from '@/types/astro';
+import { FREE_STAGE_CONTENT } from '@/content/freeStage';
+import { computeElementBalanceFromSigns } from '@/lib/astro/elements';
+import { longitudeToSign, ZODIAC_ORDER } from '@/lib/astro/zodiac';
+import { buildChartSummary } from '@/lib/summary/buildChartSummary';
+import { MOCK_CHARTS, pickMockChart } from '@/mocks/chart';
+import type { ChartSummary, ElementPointSource, SignPosition, ZodiacSignId } from '@/types/astro';
 import type { BirthInput } from '@/types/birth';
 
 const MOCK_LATENCY_MS = 900;
@@ -13,9 +17,14 @@ export class ChartCalculationError extends Error {
   }
 }
 
+function signPosition(sign: ZodiacSignId, degree: number): SignPosition {
+  return longitudeToSign(ZODIAC_ORDER.indexOf(sign) * 30 + degree);
+}
+
 /**
- * 1단계 무료 결과(태양/달/상승궁, 4원소)를 가져온다. 현재는 목업 데이터를 사용하며,
- * 실제 계산 엔진으로 교체할 때 이 함수의 시그니처(BirthInput -> ChartSummary)만 유지하면 된다.
+ * 1단계 무료 결과(태양/달/상승궁, 4원소)를 가져온다. 현재는 목업 차트를 쓰지만, 원소 비율·코멘트·문구 조립은
+ * 실제 계산과 같은 함수(computeElementBalanceFromSigns, buildChartSummary)를 지난다.
+ * 실제 계산으로 바꿀 때는 /api/chart 응답(positions, elementBalance)을 buildChartSummary에 넘기면 된다.
  */
 export async function getChartSummary(input: BirthInput): Promise<ChartSummary> {
   await new Promise<void>((resolve) => setTimeout(resolve, MOCK_LATENCY_MS));
@@ -24,8 +33,21 @@ export async function getChartSummary(input: BirthInput): Promise<ChartSummary> 
     throw new ChartCalculationError();
   }
 
-  return {
-    ...CHART_SUMMARY_MOCK,
-    rising: input.timeUnknown ? null : CHART_SUMMARY_MOCK.rising,
-  };
+  const mock = MOCK_CHARTS[pickMockChart(input.nickname)];
+  const placements: Partial<Record<ElementPointSource, ZodiacSignId>> = { ...mock.placements };
+  if (input.timeUnknown) {
+    delete placements.ascendant;
+    delete placements.midheaven;
+  }
+
+  return buildChartSummary({
+    source: 'mock',
+    bigThree: {
+      sun: signPosition(mock.placements.sun, mock.degrees.sun),
+      moon: signPosition(mock.placements.moon, mock.degrees.moon),
+      rising: input.timeUnknown ? null : signPosition(mock.placements.ascendant, mock.degrees.ascendant),
+    },
+    balance: computeElementBalanceFromSigns(placements),
+    content: FREE_STAGE_CONTENT,
+  });
 }

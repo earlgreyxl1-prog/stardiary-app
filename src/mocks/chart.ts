@@ -1,42 +1,122 @@
-import type { ChartSummary } from '@/types/astro';
+import type { ElementPointSource, ZodiacSignId } from '@/types/astro';
 
 /**
- * 결과 화면 UI 확인용 목업. 입력한 생년월일과 무관한 고정 값이다.
- * 실제 계산 엔진(CLAUDE.md 미결정 사항)이 정해지면 chartService에서 교체한다.
+ * 결과 화면 확인용 목업 차트. 입력한 생년월일과 무관한 고정 배치다.
+ * 원소 비율·코멘트는 실제와 같은 함수(computeElementBalanceFromSigns → buildChartSummary)로 만든다.
+ * 닉네임으로 장면을 고를 수 있다(목업 전용): '!balanced' '!tie' '!lacking0' '!lacking3'. 그 밖에는 기본 장면.
+ * 출생 시간을 모른다고 입력하면 상승궁·MC를 빼고 계산한다.
  */
-export const CHART_SUMMARY_MOCK: ChartSummary = {
-  source: 'mock',
-  sun: {
-    sign: 'pisces',
-    degree: 23.4,
-    headline: '꿈꾸는 공감 요정',
-    description:
-      '다른 사람의 마음을 내 일처럼 느끼는 따뜻한 사람이에요. 상상력이 풍부해서 평범한 하루에서도 이야기를 찾아내요. 가끔은 혼자만의 시간으로 마음을 충전해야 해요.',
-    keywords: ['공감', '상상력', '다정함'],
+export interface MockChart {
+  /** 무슨 화면을 보여주려는 장면인지 (설명용) */
+  description: string;
+  placements: Record<ElementPointSource, ZodiacSignId>;
+  /** 태양·달·상승궁 카드에 보일 도수 */
+  degrees: { sun: number; moon: number; ascendant: number };
+}
+
+export type MockChartId = 'default' | 'balanced' | 'tie' | 'lacking0' | 'lacking3';
+
+export const MOCK_CHARTS: Record<MockChartId, MockChart> = {
+  default: {
+    description: '물 강함 · 바람 적음 (적은 편 1개)',
+    placements: {
+      sun: 'pisces',
+      moon: 'leo',
+      ascendant: 'virgo',
+      mercury: 'aquarius',
+      venus: 'pisces',
+      mars: 'sagittarius',
+      midheaven: 'pisces',
+      jupiter: 'cancer',
+      saturn: 'capricorn',
+      uranus: 'capricorn',
+      neptune: 'capricorn',
+      pluto: 'scorpio',
+    },
+    degrees: { sun: 23.4, moon: 8.1, ascendant: 14.7 },
   },
-  moon: {
-    sign: 'leo',
-    degree: 8.1,
-    headline: '칭찬이 필요한 마음속 사자',
-    description:
-      '속으로는 인정받고 싶은 마음이 커요. 좋아하는 사람에게는 아낌없이 표현하고, 진심 어린 칭찬 한마디에 하루 종일 기분이 좋아져요.',
-    keywords: ['자존감', '표현력', '따뜻한 리더십'],
+  balanced: {
+    description: '균형형 (네 원소 모두 15~35%)',
+    placements: {
+      sun: 'aries',
+      moon: 'taurus',
+      ascendant: 'gemini',
+      mercury: 'cancer',
+      venus: 'cancer',
+      mars: 'leo',
+      midheaven: 'virgo',
+      jupiter: 'libra',
+      saturn: 'scorpio',
+      uranus: 'aquarius',
+      neptune: 'capricorn',
+      pluto: 'sagittarius',
+    },
+    degrees: { sun: 2.5, moon: 17.2, ascendant: 28.9 },
   },
-  rising: {
-    sign: 'virgo',
-    degree: 14.7,
-    headline: '차분하고 꼼꼼한 첫인상',
-    description:
-      '처음 만난 사람에게는 단정하고 믿음직한 사람으로 보여요. 작은 것까지 챙기는 모습 덕분에 "이 사람한테 맡기면 되겠다"는 인상을 줘요.',
-    keywords: ['신뢰감', '섬세함', '정돈된'],
+  tie: {
+    description: '불·흙 동점 (태양이 있는 흙의 코멘트) · 물 적음',
+    placements: {
+      sun: 'taurus',
+      moon: 'aries',
+      ascendant: 'leo',
+      mercury: 'virgo',
+      venus: 'gemini',
+      mars: 'libra',
+      midheaven: 'capricorn',
+      jupiter: 'aquarius',
+      saturn: 'sagittarius',
+      uranus: 'capricorn',
+      neptune: 'scorpio',
+      pluto: 'aries',
+    },
+    degrees: { sun: 11.0, moon: 4.6, ascendant: 20.3 },
   },
-  elements: {
-    fire: 30,
-    earth: 20,
-    air: 10,
-    water: 40,
+  lacking0: {
+    description: '불 강함 · 적은 편 없음 (최저 원소 15% 이상)',
+    placements: {
+      sun: 'aries',
+      moon: 'leo',
+      ascendant: 'taurus',
+      mercury: 'sagittarius',
+      venus: 'gemini',
+      mars: 'cancer',
+      midheaven: 'virgo',
+      jupiter: 'libra',
+      saturn: 'scorpio',
+      uranus: 'aries',
+      neptune: 'pisces',
+      pluto: 'capricorn',
+    },
+    degrees: { sun: 15.8, moon: 26.1, ascendant: 3.3 },
   },
-  dominantElement: 'water',
-  elementComment:
-    '물의 기운이 가장 강해요. 감정을 깊이 느끼고 분위기를 잘 읽어요. 바람의 기운이 적은 편이라, 생각을 말로 정리해 보면 마음이 한결 가벼워져요.',
+  lacking3: {
+    description: '불만 있음 · 흙·바람·물 모두 적은 편 (적은 편 3개)',
+    placements: {
+      sun: 'aries',
+      moon: 'leo',
+      ascendant: 'sagittarius',
+      mercury: 'aries',
+      venus: 'leo',
+      mars: 'sagittarius',
+      midheaven: 'aries',
+      jupiter: 'leo',
+      saturn: 'sagittarius',
+      uranus: 'aries',
+      neptune: 'leo',
+      pluto: 'sagittarius',
+    },
+    degrees: { sun: 7.7, moon: 12.4, ascendant: 19.0 },
+  },
 };
+
+const MOCK_NICKNAMES: Record<string, MockChartId> = {
+  '!balanced': 'balanced',
+  '!tie': 'tie',
+  '!lacking0': 'lacking0',
+  '!lacking3': 'lacking3',
+};
+
+/** 닉네임으로 목업 장면을 고른다. 해당 없으면 기본 장면. */
+export function pickMockChart(nickname: string): MockChartId {
+  return MOCK_NICKNAMES[nickname.trim()] ?? 'default';
+}
