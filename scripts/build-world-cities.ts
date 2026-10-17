@@ -368,7 +368,7 @@ if (krPath) {
     const adminLat = Number(cols[4]);
     const adminLon = Number(cols[5]);
     // 단계별 병합 규칙:
-    // - 시·도(ADM1): 이름이 같을 때만(서울특별시 ↔ 서울). 대표 좌표가 도 중심이라 거리는 보지 않는다.
+    // - 시·도(ADM1): 특별시·광역시·특별자치시가 같은 이름의 도시와 같을 때만(서울특별시 ↔ 서울). 도는 합치지 않는다.
     // - 시·군·구(ADM2): 시/군/구 접미사만 떼고 이름이 같고(또는 이름 없는 도시의 로마자 이름이 거의 같고), 같은 시·군·구 코드이거나 10km 이내. 이미 합쳐진 도시도 받는다(세종).
     // - 읍·면·동(ADM3·4): 한글 이름이 없는 도시(Naeso 같은 로마자 표기)만, 같은 시·군·구 안 10km 이내이고 로마자 이름이 거의 같을 때 한 번.
     //   이름이 있는 도시는 건드리지 않는다(고양동이 고양시를 덮어쓰지 않게).
@@ -380,7 +380,9 @@ if (krPath) {
       .map((draft) => ({ draft, distance: distanceKm(adminLat, adminLon, draft.row[6], draft.row[7]) }))
       .filter(({ draft, distance }) => {
         if (code === 'ADM1') {
-          return sameSiGunGuName(draft.row[2], nameKo) || sameSiGunGuName(draft.row[2], nameKo.replace(/도$/, ''));
+          // 특별시·광역시·특별자치시만 같은 이름의 도시와 합친다(서울특별시 ↔ 서울).
+          // 도·특별자치도는 같은 이름의 시보다 넓은 구역이라 따로 둔다(제주특별자치도 ≠ 제주시).
+          return /(특별시|광역시|특별자치시)$/.test(nameKo) && sameSiGunGuName(draft.row[2], nameKo);
         }
         if (code === 'ADM2') {
           const near = draft.admin2Code === admin2 || distance <= MERGE_MAX_KM;
