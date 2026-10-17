@@ -1,0 +1,30 @@
+/* Tailwind v4 (create-next-app 기본). v3를 쓴다면 아래 한 줄을
+   @tailwind base; @tailwind components; @tailwind utilities; 로 교체하세요. */
+@import "tailwindcss";
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.25); }
+}
+
+@keyframes mascot-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.star-twinkle {
+  animation-name: twinkle;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+.mascot-float {
+  animation: mascot-float 3.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star-twinkle,
+  .mascot-float {
+    animation: none;
+  }
+}

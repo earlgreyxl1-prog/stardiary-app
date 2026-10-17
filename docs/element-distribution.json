@@ -1,0 +1,1882 @@
+{
+  "generatedAt": "2026-10-17T14:10:12.485Z",
+  "elapsedMs": 90468,
+  "results": [
+    {
+      "scenario": {
+        "id": "world-pop",
+        "label": "전 세계(기준): 1950~2025년생, GeoNames 도시 인구 비례",
+        "years": "1950-2025",
+        "cities": 242892,
+        "sampleSize": 50000,
+        "seed": 20261021
+      },
+      "timeKnown": {
+        "sampleSize": 50000,
+        "totalPoints": 15.5,
+        "perElementPercent": {
+          "fire": {
+            "mean": 24.9,
+            "p5": 3.2,
+            "p10": 9.7,
+            "p25": 12.9,
+            "p50": 22.6,
+            "p75": 32.3,
+            "p90": 45.2,
+            "p95": 48.4
+          },
+          "earth": {
+            "mean": 25.2,
+            "p5": 3.2,
+            "p10": 6.5,
+            "p25": 16.1,
+            "p50": 22.6,
+            "p75": 35.5,
+            "p90": 45.2,
+            "p95": 51.6
+          },
+          "air": {
+            "mean": 24.7,
+            "p5": 3.2,
+            "p10": 6.5,
+            "p25": 12.9,
+            "p50": 22.6,
+            "p75": 32.3,
+            "p90": 45.2,
+            "p95": 48.4
+          },
+          "water": {
+            "mean": 25.2,
+            "p5": 3.2,
+            "p10": 9.7,
+            "p25": 12.9,
+            "p50": 25.8,
+            "p75": 35.5,
+            "p90": 45.2,
+            "p95": 48.4
+          }
+        },
+        "zeroPointShare": {
+          "fire": 2.9,
+          "earth": 3.4,
+          "air": 3.7,
+          "water": 1.6
+        },
+        "anyElementZeroShare": 11.5,
+        "dominantShare": {
+          "fire": 24.4,
+          "earth": 26,
+          "air": 24.3,
+          "water": 25.3
+        },
+        "lowestShare": {
+          "fire": 24.5,
+          "earth": 24.7,
+          "air": 26.3,
+          "water": 24.6
+        },
+        "ties": {
+          "dominantTieShare": 8.2,
+          "lowestTieShare": 11.6,
+          "lowestTieSizeShare": {
+            "2": 10.9,
+            "3": 0.7
+          }
+        },
+        "spread_maxMinusMin": {
+          "mean": 33.2,
+          "p5": 12.9,
+          "p10": 16.1,
+          "p25": 22.6,
+          "p50": 32.3,
+          "p75": 41.9,
+          "p90": 51.6,
+          "p95": 54.8
+        },
+        "minElementPercent": {
+          "mean": 9.6,
+          "p5": 0,
+          "p10": 0,
+          "p25": 3.2,
+          "p50": 9.7,
+          "p75": 12.9,
+          "p90": 16.1,
+          "p95": 19.4
+        },
+        "maxElementPercent": {
+          "mean": 42.8,
+          "p5": 32.3,
+          "p10": 32.3,
+          "p25": 35.5,
+          "p50": 41.9,
+          "p75": 48.4,
+          "p90": 54.8,
+          "p95": 58.1
+        },
+        "gapLowestToSecond": {
+          "mean": 9.4,
+          "p5": 0,
+          "p10": 0,
+          "p25": 3.2,
+          "p50": 6.5,
+          "p75": 12.9,
+          "p90": 19.4,
+          "p95": 22.6
+        },
+        "gapTopToSecond": {
+          "mean": 14.1,
+          "p5": 0,
+          "p10": 3.2,
+          "p25": 6.5,
+          "p50": 12.9,
+          "p75": 19.4,
+          "p90": 29,
+          "p95": 35.5
+        },
+        "balancedCandidates": {
+          "spreadAtMost10": 3.5,
+          "spreadAtMost15": 6.7,
+          "spreadAtMost20": 18.2,
+          "spreadAtMost25": 26.4,
+          "allBetween15and35": 9.6
+        },
+        "lackingCandidates": {
+          "minBelow5": 27.4,
+          "minBelow10": 58,
+          "minBelow15": 79.4,
+          "lowestGapAtLeast5": 67.6,
+          "lowestGapAtLeast10": 34.4
+        },
+        "recommendedRules": {
+          "balanced": 9.6,
+          "dominantSingle": 84.6,
+          "dominantTie": 5.8,
+          "dominantTieUnresolved": 0,
+          "lackingNone": 11,
+          "lackingSingle": 73.8,
+          "lackingTie2": 5.5,
+          "lackingTie3": 0.1,
+          "lackingIncludesZero": 11.5
+        },
+        "recommendedRulesByLatitude": {
+          "tropics(<23.5)": {
+            "sampleSize": 17455,
+            "balanced": 9.8,
+            "dominantSingle": 84.4,
+            "dominantTie": 5.7,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 11.1,
+            "lackingSingle": 73.5,
+            "lackingTie2": 5.5,
+            "lackingTie3": 0,
+            "lackingIncludesZero": 11.3
+          },
+          "mid(23.5-45)": {
+            "sampleSize": 25240,
+            "balanced": 9.6,
+            "dominantSingle": 84.6,
+            "dominantTie": 5.8,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 11.1,
+            "lackingSingle": 73.9,
+            "lackingTie2": 5.4,
+            "lackingTie3": 0.1,
+            "lackingIncludesZero": 11.6
+          },
+          "high(45-60)": {
+            "sampleSize": 7057,
+            "balanced": 9.2,
+            "dominantSingle": 85.2,
+            "dominantTie": 5.7,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 10.2,
+            "lackingSingle": 74.5,
+            "lackingTie2": 6.1,
+            "lackingTie3": 0.1,
+            "lackingIncludesZero": 11.9
+          },
+          "subpolar(60-66)": {
+            "sampleSize": 213,
+            "balanced": 8.9,
+            "dominantSingle": 85.4,
+            "dominantTie": 5.6,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 8.5,
+            "lackingSingle": 77.5,
+            "lackingTie2": 5.2,
+            "lackingTie3": 0,
+            "lackingIncludesZero": 10.3
+          },
+          "polar(>=66, Porphyry 대체)": {
+            "sampleSize": 35,
+            "balanced": 8.6,
+            "dominantSingle": 85.7,
+            "dominantTie": 5.7,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 20,
+            "lackingSingle": 65.7,
+            "lackingTie2": 5.7,
+            "lackingTie3": 0,
+            "lackingIncludesZero": 17.1
+          }
+        },
+        "dominantByDecade": {
+          "1950s": {
+            "fire": 25.7,
+            "earth": 23.4,
+            "air": 24,
+            "water": 26.9
+          },
+          "1960s": {
+            "fire": 20.6,
+            "earth": 31.1,
+            "air": 20.7,
+            "water": 27.6
+          },
+          "1970s": {
+            "fire": 27.3,
+            "earth": 21.8,
+            "air": 26.3,
+            "water": 24.6
+          },
+          "1980s": {
+            "fire": 25.8,
+            "earth": 25.1,
+            "air": 25.3,
+            "water": 23.9
+          },
+          "1990s": {
+            "fire": 23.2,
+            "earth": 29.6,
+            "air": 22.4,
+            "water": 24.8
+          },
+          "2000s": {
+            "fire": 25,
+            "earth": 21.9,
+            "air": 30.2,
+            "water": 22.8
+          },
+          "2010s": {
+            "fire": 25.9,
+            "earth": 27.1,
+            "air": 20.7,
+            "water": 26.3
+          },
+          "2020s": {
+            "fire": 19.5,
+            "earth": 28.8,
+            "air": 25.4,
+            "water": 26.3
+          }
+        }
+      },
+      "timeUnknown": {
+        "sampleSize": 50000,
+        "totalPoints": 12,
+        "perElementPercent": {
+          "fire": {
+            "mean": 24.8,
+            "p5": 0,
+            "p10": 4.2,
+            "p25": 12.5,
+            "p50": 25,
+            "p75": 33.3,
+            "p90": 45.8,
+            "p95": 54.2
+          },
+          "earth": {
+            "mean": 25.4,
+            "p5": 0,
+            "p10": 4.2,
+            "p25": 12.5,
+            "p50": 25,
+            "p75": 37.5,
+            "p90": 45.8,
+            "p95": 54.2
+          },
+          "air": {
+            "mean": 24.6,
+            "p5": 0,
+            "p10": 4.2,
+            "p25": 12.5,
+            "p50": 25,
+            "p75": 33.3,
+            "p90": 45.8,
+            "p95": 54.2
+          },
+          "water": {
+            "mean": 25.2,
+            "p5": 4.2,
+            "p10": 4.2,
+            "p25": 12.5,
+            "p50": 25,
+            "p75": 33.3,
+            "p90": 45.8,
+            "p95": 54.2
+          }
+        },
+        "zeroPointShare": {
+          "fire": 5.6,
+          "earth": 6.2,
+          "air": 7,
+          "water": 3
+        },
+        "anyElementZeroShare": 21.5,
+        "dominantShare": {
+          "fire": 24.4,
+          "earth": 25.9,
+          "air": 24.3,
+          "water": 25.4
+        },
+        "lowestShare": {
+          "fire": 24.6,
+          "earth": 24.4,
+          "air": 26.3,
+          "water": 24.7
+        },
+        "ties": {
+          "dominantTieShare": 9,
+          "lowestTieShare": 13.8,
+          "lowestTieSizeShare": {
+            "2": 13,
+            "3": 0.7,
+            "4": 0
+          }
+        },
+        "spread_maxMinusMin": {
+          "mean": 38.1,
+          "p5": 16.7,
+          "p10": 20.8,
+          "p25": 29.2,
+          "p50": 37.5,
+          "p75": 45.8,
+          "p90": 58.3,
+          "p95": 62.5
+        },
+        "minElementPercent": {
+          "mean": 7.7,
+          "p5": 0,
+          "p10": 0,
+          "p25": 4.2,
+          "p50": 8.3,
+          "p75": 12.5,
+          "p90": 16.7,
+          "p95": 16.7
+        },
+        "maxElementPercent": {
+          "mean": 45.7,
+          "p5": 33.3,
+          "p10": 33.3,
+          "p25": 37.5,
+          "p50": 45.8,
+          "p75": 50,
+          "p90": 58.3,
+          "p95": 62.5
+        },
+        "gapLowestToSecond": {
+          "mean": 9.9,
+          "p5": 0,
+          "p10": 0,
+          "p25": 4.2,
+          "p50": 8.3,
+          "p75": 16.7,
+          "p90": 20.8,
+          "p95": 25
+        },
+        "gapTopToSecond": {
+          "mean": 16.8,
+          "p5": 0,
+          "p10": 4.2,
+          "p25": 4.2,
+          "p50": 12.5,
+          "p75": 25,
+          "p90": 37.5,
+          "p95": 41.7
+        },
+        "balancedCandidates": {
+          "spreadAtMost10": 1.7,
+          "spreadAtMost15": 4.4,
+          "spreadAtMost20": 9,
+          "spreadAtMost25": 21.2,
+          "allBetween15and35": 8.3
+        },
+        "lackingCandidates": {
+          "minBelow5": 48.7,
+          "minBelow10": 63.3,
+          "minBelow15": 85.1,
+          "lowestGapAtLeast5": 62.2,
+          "lowestGapAtLeast10": 41.5
+        },
+        "recommendedRules": {
+          "balanced": 8.3,
+          "dominantSingle": 85.4,
+          "dominantTie": 6.3,
+          "dominantTieUnresolved": 0,
+          "lackingNone": 6.6,
+          "lackingSingle": 77.4,
+          "lackingTie2": 7.4,
+          "lackingTie3": 0.2,
+          "lackingIncludesZero": 21.5
+        },
+        "recommendedRulesByLatitude": {
+          "tropics(<23.5)": {
+            "sampleSize": 17455,
+            "balanced": 8.1,
+            "dominantSingle": 85.6,
+            "dominantTie": 6.3,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 6.4,
+            "lackingSingle": 78,
+            "lackingTie2": 7.3,
+            "lackingTie3": 0.2,
+            "lackingIncludesZero": 22
+          },
+          "mid(23.5-45)": {
+            "sampleSize": 25240,
+            "balanced": 8.4,
+            "dominantSingle": 85.3,
+            "dominantTie": 6.3,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 6.7,
+            "lackingSingle": 77.1,
+            "lackingTie2": 7.6,
+            "lackingTie3": 0.2,
+            "lackingIncludesZero": 21.3
+          },
+          "high(45-60)": {
+            "sampleSize": 7057,
+            "balanced": 8.8,
+            "dominantSingle": 84.9,
+            "dominantTie": 6.3,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 6.6,
+            "lackingSingle": 77.3,
+            "lackingTie2": 7.1,
+            "lackingTie3": 0.2,
+            "lackingIncludesZero": 20.8
+          },
+          "subpolar(60-66)": {
+            "sampleSize": 213,
+            "balanced": 7.5,
+            "dominantSingle": 88.3,
+            "dominantTie": 4.2,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 6.1,
+            "lackingSingle": 75.1,
+            "lackingTie2": 10.8,
+            "lackingTie3": 0.5,
+            "lackingIncludesZero": 19.2
+          },
+          "polar(>=66, Porphyry 대체)": {
+            "sampleSize": 35,
+            "balanced": 17.1,
+            "dominantSingle": 74.3,
+            "dominantTie": 8.6,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 2.9,
+            "lackingSingle": 80,
+            "lackingTie2": 0,
+            "lackingTie3": 0,
+            "lackingIncludesZero": 31.4
+          }
+        },
+        "dominantByDecade": {
+          "1950s": {
+            "fire": 26.9,
+            "earth": 22.7,
+            "air": 23.2,
+            "water": 27.1
+          },
+          "1960s": {
+            "fire": 19.7,
+            "earth": 31.5,
+            "air": 20.6,
+            "water": 28.2
+          },
+          "1970s": {
+            "fire": 27.4,
+            "earth": 21,
+            "air": 27,
+            "water": 24.7
+          },
+          "1980s": {
+            "fire": 26.9,
+            "earth": 24.4,
+            "air": 25.3,
+            "water": 23.4
+          },
+          "1990s": {
+            "fire": 22.6,
+            "earth": 29.7,
+            "air": 22.5,
+            "water": 25.2
+          },
+          "2000s": {
+            "fire": 25.5,
+            "earth": 21.2,
+            "air": 31.1,
+            "water": 22.2
+          },
+          "2010s": {
+            "fire": 25,
+            "earth": 27.8,
+            "air": 20.2,
+            "water": 27
+          },
+          "2020s": {
+            "fire": 19,
+            "earth": 30.5,
+            "air": 24.6,
+            "water": 25.9
+          }
+        }
+      }
+    },
+    {
+      "scenario": {
+        "id": "world-uniform",
+        "label": "민감도: 1950~2025년생, GeoNames 도시 균등 확률(소도시·고위도 비중 큼)",
+        "years": "1950-2025",
+        "cities": 242892,
+        "sampleSize": 50000,
+        "seed": 20261022
+      },
+      "timeKnown": {
+        "sampleSize": 50000,
+        "totalPoints": 15.5,
+        "perElementPercent": {
+          "fire": {
+            "mean": 25,
+            "p5": 3.2,
+            "p10": 9.7,
+            "p25": 12.9,
+            "p50": 22.6,
+            "p75": 35.5,
+            "p90": 45.2,
+            "p95": 48.4
+          },
+          "earth": {
+            "mean": 25,
+            "p5": 3.2,
+            "p10": 6.5,
+            "p25": 12.9,
+            "p50": 22.6,
+            "p75": 35.5,
+            "p90": 45.2,
+            "p95": 51.6
+          },
+          "air": {
+            "mean": 24.7,
+            "p5": 3.2,
+            "p10": 6.5,
+            "p25": 12.9,
+            "p50": 22.6,
+            "p75": 35.5,
+            "p90": 45.2,
+            "p95": 48.4
+          },
+          "water": {
+            "mean": 25.2,
+            "p5": 3.2,
+            "p10": 9.7,
+            "p25": 12.9,
+            "p50": 22.6,
+            "p75": 35.5,
+            "p90": 45.2,
+            "p95": 48.4
+          }
+        },
+        "zeroPointShare": {
+          "fire": 2.9,
+          "earth": 3.6,
+          "air": 4,
+          "water": 1.6
+        },
+        "anyElementZeroShare": 12.2,
+        "dominantShare": {
+          "fire": 24.8,
+          "earth": 25.3,
+          "air": 24.7,
+          "water": 25.1
+        },
+        "lowestShare": {
+          "fire": 24.4,
+          "earth": 24.9,
+          "air": 26,
+          "water": 24.7
+        },
+        "ties": {
+          "dominantTieShare": 8.4,
+          "lowestTieShare": 11.2,
+          "lowestTieSizeShare": {
+            "2": 10.6,
+            "3": 0.6
+          }
+        },
+        "spread_maxMinusMin": {
+          "mean": 33.5,
+          "p5": 12.9,
+          "p10": 16.1,
+          "p25": 22.6,
+          "p50": 32.3,
+          "p75": 41.9,
+          "p90": 51.6,
+          "p95": 54.8
+        },
+        "minElementPercent": {
+          "mean": 9.4,
+          "p5": 0,
+          "p10": 0,
+          "p25": 3.2,
+          "p50": 9.7,
+          "p75": 12.9,
+          "p90": 16.1,
+          "p95": 19.4
+        },
+        "maxElementPercent": {
+          "mean": 42.9,
+          "p5": 32.3,
+          "p10": 32.3,
+          "p25": 35.5,
+          "p50": 41.9,
+          "p75": 48.4,
+          "p90": 54.8,
+          "p95": 58.1
+        },
+        "gapLowestToSecond": {
+          "mean": 9.5,
+          "p5": 0,
+          "p10": 0,
+          "p25": 3.2,
+          "p50": 9.7,
+          "p75": 12.9,
+          "p90": 19.4,
+          "p95": 22.6
+        },
+        "gapTopToSecond": {
+          "mean": 14.2,
+          "p5": 0,
+          "p10": 3.2,
+          "p25": 6.5,
+          "p50": 12.9,
+          "p75": 19.4,
+          "p90": 32.3,
+          "p95": 35.5
+        },
+        "balancedCandidates": {
+          "spreadAtMost10": 3.3,
+          "spreadAtMost15": 6.4,
+          "spreadAtMost20": 17.8,
+          "spreadAtMost25": 25.7,
+          "allBetween15and35": 9.3
+        },
+        "lackingCandidates": {
+          "minBelow5": 28.4,
+          "minBelow10": 59.1,
+          "minBelow15": 80.1,
+          "lowestGapAtLeast5": 68.1,
+          "lowestGapAtLeast10": 35.2
+        },
+        "recommendedRules": {
+          "balanced": 9.3,
+          "dominantSingle": 84.7,
+          "dominantTie": 6,
+          "dominantTieUnresolved": 0,
+          "lackingNone": 10.7,
+          "lackingSingle": 74.5,
+          "lackingTie2": 5.5,
+          "lackingTie3": 0.1,
+          "lackingIncludesZero": 12.2
+        },
+        "recommendedRulesByLatitude": {
+          "tropics(<23.5)": {
+            "sampleSize": 13318,
+            "balanced": 10,
+            "dominantSingle": 84,
+            "dominantTie": 5.9,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 11.2,
+            "lackingSingle": 73.3,
+            "lackingTie2": 5.5,
+            "lackingTie3": 0,
+            "lackingIncludesZero": 11.6
+          },
+          "mid(23.5-45)": {
+            "sampleSize": 20043,
+            "balanced": 9.3,
+            "dominantSingle": 84.8,
+            "dominantTie": 5.9,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 10.5,
+            "lackingSingle": 74.8,
+            "lackingTie2": 5.3,
+            "lackingTie3": 0.1,
+            "lackingIncludesZero": 12
+          },
+          "high(45-60)": {
+            "sampleSize": 16109,
+            "balanced": 8.7,
+            "dominantSingle": 85.1,
+            "dominantTie": 6.2,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 10.4,
+            "lackingSingle": 75.1,
+            "lackingTie2": 5.7,
+            "lackingTie3": 0.1,
+            "lackingIncludesZero": 12.7
+          },
+          "subpolar(60-66)": {
+            "sampleSize": 463,
+            "balanced": 8.9,
+            "dominantSingle": 84.4,
+            "dominantTie": 6.7,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 9.3,
+            "lackingSingle": 77.3,
+            "lackingTie2": 4.5,
+            "lackingTie3": 0,
+            "lackingIncludesZero": 16.4
+          },
+          "polar(>=66, Porphyry 대체)": {
+            "sampleSize": 67,
+            "balanced": 3,
+            "dominantSingle": 89.6,
+            "dominantTie": 7.5,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 11.9,
+            "lackingSingle": 74.6,
+            "lackingTie2": 10.4,
+            "lackingTie3": 0,
+            "lackingIncludesZero": 14.9
+          }
+        },
+        "dominantByDecade": {
+          "1950s": {
+            "fire": 26.2,
+            "earth": 21,
+            "air": 25.5,
+            "water": 27.3
+          },
+          "1960s": {
+            "fire": 22.7,
+            "earth": 29.2,
+            "air": 21.1,
+            "water": 27
+          },
+          "1970s": {
+            "fire": 27.6,
+            "earth": 22.4,
+            "air": 27.6,
+            "water": 22.5
+          },
+          "1980s": {
+            "fire": 26.1,
+            "earth": 24.8,
+            "air": 25.1,
+            "water": 24
+          },
+          "1990s": {
+            "fire": 23.5,
+            "earth": 29,
+            "air": 22.5,
+            "water": 25.1
+          },
+          "2000s": {
+            "fire": 24.8,
+            "earth": 22.2,
+            "air": 30,
+            "water": 23
+          },
+          "2010s": {
+            "fire": 26.5,
+            "earth": 27,
+            "air": 20.8,
+            "water": 25.7
+          },
+          "2020s": {
+            "fire": 19,
+            "earth": 28.3,
+            "air": 25.5,
+            "water": 27.3
+          }
+        }
+      },
+      "timeUnknown": {
+        "sampleSize": 50000,
+        "totalPoints": 12,
+        "perElementPercent": {
+          "fire": {
+            "mean": 24.9,
+            "p5": 0,
+            "p10": 4.2,
+            "p25": 12.5,
+            "p50": 25,
+            "p75": 33.3,
+            "p90": 45.8,
+            "p95": 54.2
+          },
+          "earth": {
+            "mean": 25.2,
+            "p5": 0,
+            "p10": 4.2,
+            "p25": 12.5,
+            "p50": 25,
+            "p75": 37.5,
+            "p90": 45.8,
+            "p95": 54.2
+          },
+          "air": {
+            "mean": 24.7,
+            "p5": 0,
+            "p10": 4.2,
+            "p25": 12.5,
+            "p50": 25,
+            "p75": 37.5,
+            "p90": 45.8,
+            "p95": 54.2
+          },
+          "water": {
+            "mean": 25.2,
+            "p5": 4.2,
+            "p10": 4.2,
+            "p25": 12.5,
+            "p50": 25,
+            "p75": 33.3,
+            "p90": 45.8,
+            "p95": 54.2
+          }
+        },
+        "zeroPointShare": {
+          "fire": 5.6,
+          "earth": 6.5,
+          "air": 7,
+          "water": 2.9
+        },
+        "anyElementZeroShare": 21.7,
+        "dominantShare": {
+          "fire": 24.7,
+          "earth": 25.6,
+          "air": 24.8,
+          "water": 24.9
+        },
+        "lowestShare": {
+          "fire": 24.5,
+          "earth": 24.5,
+          "air": 26.3,
+          "water": 24.7
+        },
+        "ties": {
+          "dominantTieShare": 9.4,
+          "lowestTieShare": 13.5,
+          "lowestTieSizeShare": {
+            "2": 12.7,
+            "3": 0.8,
+            "4": 0
+          }
+        },
+        "spread_maxMinusMin": {
+          "mean": 38,
+          "p5": 16.7,
+          "p10": 20.8,
+          "p25": 29.2,
+          "p50": 37.5,
+          "p75": 45.8,
+          "p90": 54.2,
+          "p95": 62.5
+        },
+        "minElementPercent": {
+          "mean": 7.7,
+          "p5": 0,
+          "p10": 0,
+          "p25": 4.2,
+          "p50": 8.3,
+          "p75": 12.5,
+          "p90": 16.7,
+          "p95": 16.7
+        },
+        "maxElementPercent": {
+          "mean": 45.7,
+          "p5": 33.3,
+          "p10": 33.3,
+          "p25": 37.5,
+          "p50": 45.8,
+          "p75": 50,
+          "p90": 58.3,
+          "p95": 62.5
+        },
+        "gapLowestToSecond": {
+          "mean": 10,
+          "p5": 0,
+          "p10": 0,
+          "p25": 4.2,
+          "p50": 8.3,
+          "p75": 16.7,
+          "p90": 20.8,
+          "p95": 25
+        },
+        "gapTopToSecond": {
+          "mean": 16.7,
+          "p5": 0,
+          "p10": 4.2,
+          "p25": 4.2,
+          "p50": 12.5,
+          "p75": 25,
+          "p90": 37.5,
+          "p95": 41.7
+        },
+        "balancedCandidates": {
+          "spreadAtMost10": 1.8,
+          "spreadAtMost15": 4.6,
+          "spreadAtMost20": 9.2,
+          "spreadAtMost25": 21.3,
+          "allBetween15and35": 8.6
+        },
+        "lackingCandidates": {
+          "minBelow5": 48.6,
+          "minBelow10": 63.1,
+          "minBelow15": 84.9,
+          "lowestGapAtLeast5": 62.2,
+          "lowestGapAtLeast10": 41.3
+        },
+        "recommendedRules": {
+          "balanced": 8.6,
+          "dominantSingle": 84.9,
+          "dominantTie": 6.5,
+          "dominantTieUnresolved": 0,
+          "lackingNone": 6.5,
+          "lackingSingle": 77.5,
+          "lackingTie2": 7.2,
+          "lackingTie3": 0.2,
+          "lackingIncludesZero": 21.7
+        },
+        "recommendedRulesByLatitude": {
+          "tropics(<23.5)": {
+            "sampleSize": 13318,
+            "balanced": 8.5,
+            "dominantSingle": 85,
+            "dominantTie": 6.5,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 6.5,
+            "lackingSingle": 77.5,
+            "lackingTie2": 7.3,
+            "lackingTie3": 0.2,
+            "lackingIncludesZero": 21.9
+          },
+          "mid(23.5-45)": {
+            "sampleSize": 20043,
+            "balanced": 8.6,
+            "dominantSingle": 85.1,
+            "dominantTie": 6.3,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 6.5,
+            "lackingSingle": 77.5,
+            "lackingTie2": 7.2,
+            "lackingTie3": 0.3,
+            "lackingIncludesZero": 21.7
+          },
+          "high(45-60)": {
+            "sampleSize": 16109,
+            "balanced": 8.6,
+            "dominantSingle": 84.7,
+            "dominantTie": 6.7,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 6.6,
+            "lackingSingle": 77.4,
+            "lackingTie2": 7.3,
+            "lackingTie3": 0.2,
+            "lackingIncludesZero": 21.5
+          },
+          "subpolar(60-66)": {
+            "sampleSize": 463,
+            "balanced": 8.2,
+            "dominantSingle": 84.7,
+            "dominantTie": 7.1,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 6.7,
+            "lackingSingle": 80.1,
+            "lackingTie2": 5,
+            "lackingTie3": 0,
+            "lackingIncludesZero": 25.3
+          },
+          "polar(>=66, Porphyry 대체)": {
+            "sampleSize": 67,
+            "balanced": 6,
+            "dominantSingle": 88.1,
+            "dominantTie": 6,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 9,
+            "lackingSingle": 77.6,
+            "lackingTie2": 7.5,
+            "lackingTie3": 0,
+            "lackingIncludesZero": 26.9
+          }
+        },
+        "dominantByDecade": {
+          "1950s": {
+            "fire": 26.4,
+            "earth": 21.5,
+            "air": 24.2,
+            "water": 27.9
+          },
+          "1960s": {
+            "fire": 21.4,
+            "earth": 30.4,
+            "air": 21.7,
+            "water": 26.5
+          },
+          "1970s": {
+            "fire": 26.9,
+            "earth": 21.7,
+            "air": 28.4,
+            "water": 22.9
+          },
+          "1980s": {
+            "fire": 26.8,
+            "earth": 25.1,
+            "air": 25.1,
+            "water": 23
+          },
+          "1990s": {
+            "fire": 23.1,
+            "earth": 30,
+            "air": 21.9,
+            "water": 24.9
+          },
+          "2000s": {
+            "fire": 25.6,
+            "earth": 20.9,
+            "air": 31.2,
+            "water": 22.4
+          },
+          "2010s": {
+            "fire": 25.7,
+            "earth": 27.2,
+            "air": 21.3,
+            "water": 25.8
+          },
+          "2020s": {
+            "fire": 19.5,
+            "earth": 29.6,
+            "air": 24.6,
+            "water": 26.4
+          }
+        }
+      }
+    },
+    {
+      "scenario": {
+        "id": "korea",
+        "label": "민감도: 1960~2010년생, 국내 도시 인구 비례",
+        "years": "1960-2010",
+        "cities": 6926,
+        "sampleSize": 50000,
+        "seed": 20261017
+      },
+      "timeKnown": {
+        "sampleSize": 50000,
+        "totalPoints": 15.5,
+        "perElementPercent": {
+          "fire": {
+            "mean": 24.9,
+            "p5": 3.2,
+            "p10": 9.7,
+            "p25": 12.9,
+            "p50": 22.6,
+            "p75": 32.3,
+            "p90": 41.9,
+            "p95": 48.4
+          },
+          "earth": {
+            "mean": 25.1,
+            "p5": 3.2,
+            "p10": 6.5,
+            "p25": 16.1,
+            "p50": 22.6,
+            "p75": 35.5,
+            "p90": 45.2,
+            "p95": 48.4
+          },
+          "air": {
+            "mean": 25.1,
+            "p5": 3.2,
+            "p10": 6.5,
+            "p25": 12.9,
+            "p50": 22.6,
+            "p75": 35.5,
+            "p90": 45.2,
+            "p95": 51.6
+          },
+          "water": {
+            "mean": 24.9,
+            "p5": 3.2,
+            "p10": 6.5,
+            "p25": 12.9,
+            "p50": 22.6,
+            "p75": 35.5,
+            "p90": 45.2,
+            "p95": 48.4
+          }
+        },
+        "zeroPointShare": {
+          "fire": 3.1,
+          "earth": 3.9,
+          "air": 3.2,
+          "water": 2.3
+        },
+        "anyElementZeroShare": 12.4,
+        "dominantShare": {
+          "fire": 24.5,
+          "earth": 25.4,
+          "air": 25.5,
+          "water": 24.7
+        },
+        "lowestShare": {
+          "fire": 24.6,
+          "earth": 24.7,
+          "air": 25.5,
+          "water": 25.2
+        },
+        "ties": {
+          "dominantTieShare": 8.2,
+          "lowestTieShare": 11.2,
+          "lowestTieSizeShare": {
+            "2": 10.5,
+            "3": 0.7
+          }
+        },
+        "spread_maxMinusMin": {
+          "mean": 33.5,
+          "p5": 12.9,
+          "p10": 16.1,
+          "p25": 22.6,
+          "p50": 32.3,
+          "p75": 41.9,
+          "p90": 51.6,
+          "p95": 54.8
+        },
+        "minElementPercent": {
+          "mean": 9.4,
+          "p5": 0,
+          "p10": 0,
+          "p25": 3.2,
+          "p50": 9.7,
+          "p75": 12.9,
+          "p90": 16.1,
+          "p95": 19.4
+        },
+        "maxElementPercent": {
+          "mean": 42.9,
+          "p5": 32.3,
+          "p10": 32.3,
+          "p25": 35.5,
+          "p50": 41.9,
+          "p75": 48.4,
+          "p90": 54.8,
+          "p95": 58.1
+        },
+        "gapLowestToSecond": {
+          "mean": 9.5,
+          "p5": 0,
+          "p10": 0,
+          "p25": 3.2,
+          "p50": 9.7,
+          "p75": 12.9,
+          "p90": 19.4,
+          "p95": 22.6
+        },
+        "gapTopToSecond": {
+          "mean": 14.1,
+          "p5": 0,
+          "p10": 3.2,
+          "p25": 6.5,
+          "p50": 12.9,
+          "p75": 19.4,
+          "p90": 29,
+          "p95": 35.5
+        },
+        "balancedCandidates": {
+          "spreadAtMost10": 3.3,
+          "spreadAtMost15": 6.4,
+          "spreadAtMost20": 17.7,
+          "spreadAtMost25": 25.5,
+          "allBetween15and35": 9.1
+        },
+        "lackingCandidates": {
+          "minBelow5": 27.7,
+          "minBelow10": 59.3,
+          "minBelow15": 80.5,
+          "lowestGapAtLeast5": 68.1,
+          "lowestGapAtLeast10": 35.4
+        },
+        "recommendedRules": {
+          "balanced": 9.1,
+          "dominantSingle": 85.1,
+          "dominantTie": 5.8,
+          "dominantTieUnresolved": 0,
+          "lackingNone": 10.4,
+          "lackingSingle": 74.9,
+          "lackingTie2": 5.5,
+          "lackingTie3": 0.1,
+          "lackingIncludesZero": 12.4
+        },
+        "recommendedRulesByLatitude": {
+          "tropics(<23.5)": null,
+          "mid(23.5-45)": {
+            "sampleSize": 50000,
+            "balanced": 9.1,
+            "dominantSingle": 85.1,
+            "dominantTie": 5.8,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 10.4,
+            "lackingSingle": 74.9,
+            "lackingTie2": 5.5,
+            "lackingTie3": 0.1,
+            "lackingIncludesZero": 12.4
+          },
+          "high(45-60)": null,
+          "subpolar(60-66)": null,
+          "polar(>=66, Porphyry 대체)": null
+        },
+        "dominantByDecade": {
+          "1960s": {
+            "fire": 21.8,
+            "earth": 29.8,
+            "air": 21.7,
+            "water": 26.8
+          },
+          "1970s": {
+            "fire": 27.1,
+            "earth": 21.8,
+            "air": 28.1,
+            "water": 22.9
+          },
+          "1980s": {
+            "fire": 26.2,
+            "earth": 25,
+            "air": 24.4,
+            "water": 24.4
+          },
+          "1990s": {
+            "fire": 23.2,
+            "earth": 28.8,
+            "air": 22.2,
+            "water": 25.9
+          },
+          "2000s": {
+            "fire": 24.7,
+            "earth": 21.1,
+            "air": 31,
+            "water": 23.2
+          },
+          "2010s": {
+            "fire": 19,
+            "earth": 28.1,
+            "air": 24.1,
+            "water": 28.9
+          }
+        }
+      },
+      "timeUnknown": {
+        "sampleSize": 50000,
+        "totalPoints": 12,
+        "perElementPercent": {
+          "fire": {
+            "mean": 24.8,
+            "p5": 0,
+            "p10": 4.2,
+            "p25": 12.5,
+            "p50": 25,
+            "p75": 33.3,
+            "p90": 45.8,
+            "p95": 54.2
+          },
+          "earth": {
+            "mean": 25.2,
+            "p5": 0,
+            "p10": 4.2,
+            "p25": 12.5,
+            "p50": 25,
+            "p75": 37.5,
+            "p90": 45.8,
+            "p95": 54.2
+          },
+          "air": {
+            "mean": 25.2,
+            "p5": 0,
+            "p10": 4.2,
+            "p25": 12.5,
+            "p50": 25,
+            "p75": 37.5,
+            "p90": 45.8,
+            "p95": 54.2
+          },
+          "water": {
+            "mean": 24.8,
+            "p5": 4.2,
+            "p10": 4.2,
+            "p25": 12.5,
+            "p50": 25,
+            "p75": 33.3,
+            "p90": 45.8,
+            "p95": 54.2
+          }
+        },
+        "zeroPointShare": {
+          "fire": 6.1,
+          "earth": 6.8,
+          "air": 5.8,
+          "water": 4.1
+        },
+        "anyElementZeroShare": 22.5,
+        "dominantShare": {
+          "fire": 24.6,
+          "earth": 25.3,
+          "air": 25.4,
+          "water": 24.6
+        },
+        "lowestShare": {
+          "fire": 24.8,
+          "earth": 24.6,
+          "air": 25.2,
+          "water": 25.4
+        },
+        "ties": {
+          "dominantTieShare": 8.8,
+          "lowestTieShare": 13.6,
+          "lowestTieSizeShare": {
+            "2": 12.8,
+            "3": 0.7,
+            "4": 0
+          }
+        },
+        "spread_maxMinusMin": {
+          "mean": 38.1,
+          "p5": 16.7,
+          "p10": 20.8,
+          "p25": 29.2,
+          "p50": 37.5,
+          "p75": 45.8,
+          "p90": 58.3,
+          "p95": 62.5
+        },
+        "minElementPercent": {
+          "mean": 7.6,
+          "p5": 0,
+          "p10": 0,
+          "p25": 4.2,
+          "p50": 8.3,
+          "p75": 12.5,
+          "p90": 16.7,
+          "p95": 16.7
+        },
+        "maxElementPercent": {
+          "mean": 45.7,
+          "p5": 33.3,
+          "p10": 33.3,
+          "p25": 37.5,
+          "p50": 45.8,
+          "p75": 50,
+          "p90": 58.3,
+          "p95": 62.5
+        },
+        "gapLowestToSecond": {
+          "mean": 10,
+          "p5": 0,
+          "p10": 0,
+          "p25": 4.2,
+          "p50": 8.3,
+          "p75": 16.7,
+          "p90": 20.8,
+          "p95": 25
+        },
+        "gapTopToSecond": {
+          "mean": 16.7,
+          "p5": 0,
+          "p10": 4.2,
+          "p25": 4.2,
+          "p50": 12.5,
+          "p75": 25,
+          "p90": 37.5,
+          "p95": 41.7
+        },
+        "balancedCandidates": {
+          "spreadAtMost10": 1.8,
+          "spreadAtMost15": 4.3,
+          "spreadAtMost20": 8.7,
+          "spreadAtMost25": 21.1,
+          "allBetween15and35": 8.2
+        },
+        "lackingCandidates": {
+          "minBelow5": 47.9,
+          "minBelow10": 64,
+          "minBelow15": 85.4,
+          "lowestGapAtLeast5": 61.9,
+          "lowestGapAtLeast10": 41.2
+        },
+        "recommendedRules": {
+          "balanced": 8.2,
+          "dominantSingle": 85.8,
+          "dominantTie": 6,
+          "dominantTieUnresolved": 0,
+          "lackingNone": 6.4,
+          "lackingSingle": 77.8,
+          "lackingTie2": 7.4,
+          "lackingTie3": 0.2,
+          "lackingIncludesZero": 22.5
+        },
+        "recommendedRulesByLatitude": {
+          "tropics(<23.5)": null,
+          "mid(23.5-45)": {
+            "sampleSize": 50000,
+            "balanced": 8.2,
+            "dominantSingle": 85.8,
+            "dominantTie": 6,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 6.4,
+            "lackingSingle": 77.8,
+            "lackingTie2": 7.4,
+            "lackingTie3": 0.2,
+            "lackingIncludesZero": 22.5
+          },
+          "high(45-60)": null,
+          "subpolar(60-66)": null,
+          "polar(>=66, Porphyry 대체)": null
+        },
+        "dominantByDecade": {
+          "1960s": {
+            "fire": 20.7,
+            "earth": 30.8,
+            "air": 21.4,
+            "water": 27
+          },
+          "1970s": {
+            "fire": 26.9,
+            "earth": 21.8,
+            "air": 27.9,
+            "water": 23.4
+          },
+          "1980s": {
+            "fire": 27.6,
+            "earth": 24.1,
+            "air": 25,
+            "water": 23.3
+          },
+          "1990s": {
+            "fire": 22.9,
+            "earth": 29.3,
+            "air": 22,
+            "water": 25.8
+          },
+          "2000s": {
+            "fire": 26.1,
+            "earth": 20.2,
+            "air": 30.7,
+            "water": 23
+          },
+          "2010s": {
+            "fire": 15.9,
+            "earth": 28.4,
+            "air": 26.3,
+            "water": 29.4
+          }
+        }
+      }
+    },
+    {
+      "scenario": {
+        "id": "korea-young",
+        "label": "민감도: 1985~2010년생, 국내 도시 인구 비례",
+        "years": "1985-2010",
+        "cities": 6926,
+        "sampleSize": 50000,
+        "seed": 20261018
+      },
+      "timeKnown": {
+        "sampleSize": 50000,
+        "totalPoints": 15.5,
+        "perElementPercent": {
+          "fire": {
+            "mean": 25,
+            "p5": 3.2,
+            "p10": 9.7,
+            "p25": 12.9,
+            "p50": 22.6,
+            "p75": 35.5,
+            "p90": 45.2,
+            "p95": 48.4
+          },
+          "earth": {
+            "mean": 25.2,
+            "p5": 3.2,
+            "p10": 6.5,
+            "p25": 12.9,
+            "p50": 22.6,
+            "p75": 35.5,
+            "p90": 45.2,
+            "p95": 51.6
+          },
+          "air": {
+            "mean": 25,
+            "p5": 3.2,
+            "p10": 6.5,
+            "p25": 12.9,
+            "p50": 22.6,
+            "p75": 35.5,
+            "p90": 45.2,
+            "p95": 48.4
+          },
+          "water": {
+            "mean": 24.8,
+            "p5": 3.2,
+            "p10": 6.5,
+            "p25": 12.9,
+            "p50": 22.6,
+            "p75": 35.5,
+            "p90": 45.2,
+            "p95": 51.6
+          }
+        },
+        "zeroPointShare": {
+          "fire": 3.8,
+          "earth": 3.3,
+          "air": 2.9,
+          "water": 3
+        },
+        "anyElementZeroShare": 12.9,
+        "dominantShare": {
+          "fire": 25.1,
+          "earth": 25.7,
+          "air": 24.5,
+          "water": 24.7
+        },
+        "lowestShare": {
+          "fire": 24.5,
+          "earth": 25.2,
+          "air": 24.6,
+          "water": 25.7
+        },
+        "ties": {
+          "dominantTieShare": 8.1,
+          "lowestTieShare": 11.1,
+          "lowestTieSizeShare": {
+            "2": 10.4,
+            "3": 0.7
+          }
+        },
+        "spread_maxMinusMin": {
+          "mean": 33.6,
+          "p5": 12.9,
+          "p10": 16.1,
+          "p25": 22.6,
+          "p50": 32.3,
+          "p75": 41.9,
+          "p90": 51.6,
+          "p95": 54.8
+        },
+        "minElementPercent": {
+          "mean": 9.4,
+          "p5": 0,
+          "p10": 0,
+          "p25": 3.2,
+          "p50": 9.7,
+          "p75": 12.9,
+          "p90": 16.1,
+          "p95": 19.4
+        },
+        "maxElementPercent": {
+          "mean": 43,
+          "p5": 32.3,
+          "p10": 32.3,
+          "p25": 35.5,
+          "p50": 41.9,
+          "p75": 48.4,
+          "p90": 54.8,
+          "p95": 58.1
+        },
+        "gapLowestToSecond": {
+          "mean": 9.5,
+          "p5": 0,
+          "p10": 0,
+          "p25": 3.2,
+          "p50": 9.7,
+          "p75": 12.9,
+          "p90": 19.4,
+          "p95": 22.6
+        },
+        "gapTopToSecond": {
+          "mean": 14.3,
+          "p5": 0,
+          "p10": 3.2,
+          "p25": 6.5,
+          "p50": 12.9,
+          "p75": 19.4,
+          "p90": 32.3,
+          "p95": 38.7
+        },
+        "balancedCandidates": {
+          "spreadAtMost10": 3.2,
+          "spreadAtMost15": 6.4,
+          "spreadAtMost20": 17.8,
+          "spreadAtMost25": 25.4,
+          "allBetween15and35": 9
+        },
+        "lackingCandidates": {
+          "minBelow5": 27.6,
+          "minBelow10": 60.1,
+          "minBelow15": 80.6,
+          "lowestGapAtLeast5": 67.9,
+          "lowestGapAtLeast10": 35
+        },
+        "recommendedRules": {
+          "balanced": 9,
+          "dominantSingle": 85,
+          "dominantTie": 6,
+          "dominantTieUnresolved": 0,
+          "lackingNone": 10.4,
+          "lackingSingle": 74.9,
+          "lackingTie2": 5.6,
+          "lackingTie3": 0.1,
+          "lackingIncludesZero": 12.9
+        },
+        "recommendedRulesByLatitude": {
+          "tropics(<23.5)": null,
+          "mid(23.5-45)": {
+            "sampleSize": 50000,
+            "balanced": 9,
+            "dominantSingle": 85,
+            "dominantTie": 6,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 10.4,
+            "lackingSingle": 74.9,
+            "lackingTie2": 5.6,
+            "lackingTie3": 0.1,
+            "lackingIncludesZero": 12.9
+          },
+          "high(45-60)": null,
+          "subpolar(60-66)": null,
+          "polar(>=66, Porphyry 대체)": null
+        },
+        "dominantByDecade": {
+          "1980s": {
+            "fire": 29.1,
+            "earth": 26.7,
+            "air": 17.9,
+            "water": 26.3
+          },
+          "1990s": {
+            "fire": 24,
+            "earth": 29.3,
+            "air": 22.2,
+            "water": 24.5
+          },
+          "2000s": {
+            "fire": 24.8,
+            "earth": 21.3,
+            "air": 30.2,
+            "water": 23.7
+          },
+          "2010s": {
+            "fire": 19,
+            "earth": 28.7,
+            "air": 23.4,
+            "water": 28.8
+          }
+        }
+      },
+      "timeUnknown": {
+        "sampleSize": 50000,
+        "totalPoints": 12,
+        "perElementPercent": {
+          "fire": {
+            "mean": 25.1,
+            "p5": 0,
+            "p10": 4.2,
+            "p25": 12.5,
+            "p50": 25,
+            "p75": 33.3,
+            "p90": 45.8,
+            "p95": 54.2
+          },
+          "earth": {
+            "mean": 25.3,
+            "p5": 0,
+            "p10": 4.2,
+            "p25": 12.5,
+            "p50": 25,
+            "p75": 37.5,
+            "p90": 45.8,
+            "p95": 54.2
+          },
+          "air": {
+            "mean": 25.1,
+            "p5": 0,
+            "p10": 4.2,
+            "p25": 12.5,
+            "p50": 25,
+            "p75": 37.5,
+            "p90": 45.8,
+            "p95": 54.2
+          },
+          "water": {
+            "mean": 24.5,
+            "p5": 0,
+            "p10": 4.2,
+            "p25": 12.5,
+            "p50": 25,
+            "p75": 33.3,
+            "p90": 45.8,
+            "p95": 54.2
+          }
+        },
+        "zeroPointShare": {
+          "fire": 7,
+          "earth": 6,
+          "air": 5.4,
+          "water": 5.4
+        },
+        "anyElementZeroShare": 23.6,
+        "dominantShare": {
+          "fire": 25.3,
+          "earth": 26,
+          "air": 24.6,
+          "water": 24.1
+        },
+        "lowestShare": {
+          "fire": 24.8,
+          "earth": 25,
+          "air": 24.1,
+          "water": 26.1
+        },
+        "ties": {
+          "dominantTieShare": 8.9,
+          "lowestTieShare": 13.5,
+          "lowestTieSizeShare": {
+            "2": 12.7,
+            "3": 0.7,
+            "4": 0.1
+          }
+        },
+        "spread_maxMinusMin": {
+          "mean": 38.2,
+          "p5": 16.7,
+          "p10": 20.8,
+          "p25": 29.2,
+          "p50": 37.5,
+          "p75": 45.8,
+          "p90": 58.3,
+          "p95": 62.5
+        },
+        "minElementPercent": {
+          "mean": 7.6,
+          "p5": 0,
+          "p10": 0,
+          "p25": 4.2,
+          "p50": 8.3,
+          "p75": 12.5,
+          "p90": 16.7,
+          "p95": 16.7
+        },
+        "maxElementPercent": {
+          "mean": 45.8,
+          "p5": 33.3,
+          "p10": 33.3,
+          "p25": 37.5,
+          "p50": 45.8,
+          "p75": 50,
+          "p90": 58.3,
+          "p95": 62.5
+        },
+        "gapLowestToSecond": {
+          "mean": 10,
+          "p5": 0,
+          "p10": 0,
+          "p25": 4.2,
+          "p50": 8.3,
+          "p75": 16.7,
+          "p90": 20.8,
+          "p95": 25
+        },
+        "gapTopToSecond": {
+          "mean": 16.9,
+          "p5": 0,
+          "p10": 4.2,
+          "p25": 4.2,
+          "p50": 12.5,
+          "p75": 25,
+          "p90": 37.5,
+          "p95": 45.8
+        },
+        "balancedCandidates": {
+          "spreadAtMost10": 1.8,
+          "spreadAtMost15": 4.8,
+          "spreadAtMost20": 9,
+          "spreadAtMost25": 20.9,
+          "allBetween15and35": 8.3
+        },
+        "lackingCandidates": {
+          "minBelow5": 47.7,
+          "minBelow10": 62.9,
+          "minBelow15": 85.7,
+          "lowestGapAtLeast5": 61.6,
+          "lowestGapAtLeast10": 41
+        },
+        "recommendedRules": {
+          "balanced": 8.3,
+          "dominantSingle": 86.1,
+          "dominantTie": 5.6,
+          "dominantTieUnresolved": 0,
+          "lackingNone": 6,
+          "lackingSingle": 77.8,
+          "lackingTie2": 7.7,
+          "lackingTie3": 0.2,
+          "lackingIncludesZero": 23.6
+        },
+        "recommendedRulesByLatitude": {
+          "tropics(<23.5)": null,
+          "mid(23.5-45)": {
+            "sampleSize": 50000,
+            "balanced": 8.3,
+            "dominantSingle": 86.1,
+            "dominantTie": 5.6,
+            "dominantTieUnresolved": 0,
+            "lackingNone": 6,
+            "lackingSingle": 77.8,
+            "lackingTie2": 7.7,
+            "lackingTie3": 0.2,
+            "lackingIncludesZero": 23.6
+          },
+          "high(45-60)": null,
+          "subpolar(60-66)": null,
+          "polar(>=66, Porphyry 대체)": null
+        },
+        "dominantByDecade": {
+          "1980s": {
+            "fire": 30.6,
+            "earth": 27.4,
+            "air": 17.6,
+            "water": 24.4
+          },
+          "1990s": {
+            "fire": 23.1,
+            "earth": 30,
+            "air": 22,
+            "water": 24.9
+          },
+          "2000s": {
+            "fire": 25.8,
+            "earth": 20.9,
+            "air": 30.6,
+            "water": 22.8
+          },
+          "2010s": {
+            "fire": 17.3,
+            "earth": 29.9,
+            "air": 24.8,
+            "water": 27.9
+          }
+        }
+      }
+    }
+  ]
+}

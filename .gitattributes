@@ -1,0 +1,6 @@
+# 줄바꿈은 LF로 통일한다 (Windows에서 작업해도 저장소에는 LF)
+* text=auto eol=lf
+
+# 생성된 대용량 데이터: diff로 보여 주지 않는다 (만드는 법은 scripts/build-world-cities.ts)
+data/*.json -diff linguist-generated
+docs/element-distribution.json -diff linguist-generated
