@@ -147,6 +147,25 @@ export interface ElementBalance {
 export interface ChartApiResponse {
   positions: NatalPositions;
   elementBalance: ElementBalance;
+  /** 10천체 사이의 메이저 애스펙트. 정확한 순(오차가 작은 순) */
+  aspects: Aspect[];
+}
+
+/** 메이저 애스펙트 5종 (CLAUDE.md 6번) */
+export type AspectType = 'conjunction' | 'opposition' | 'trine' | 'square' | 'sextile';
+
+/** 두 천체가 이루는 각도 */
+export interface Aspect {
+  /** BODY 순서(태양 → 명왕성)에서 앞선 천체 */
+  a: BodyId;
+  b: BodyId;
+  type: AspectType;
+  /** 두 천체 사이의 실제 각도 (0 이상 180 이하) */
+  separation: number;
+  /** 정확한 각도에서 벗어난 정도 (0 이상, 허용 오차 이하) */
+  deviation: number;
+  /** 이 쌍에 적용한 허용 오차 */
+  orb: number;
 }
 
 /** 1단계 무료 결과에서 보여주는 핵심 3대 요소 */

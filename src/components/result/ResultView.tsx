@@ -5,6 +5,7 @@ import { Mascot } from '@/components/onboarding/Mascot';
 import { ElementBalance } from '@/components/result/ElementBalance';
 import { LockedRisingCard } from '@/components/result/LockedRisingCard';
 import { PlacementCard } from '@/components/result/PlacementCard';
+import { ReportTeaser } from '@/components/result/ReportTeaser';
 import { BackToOnboardingLink, PreviewNotice } from '@/components/result/ResultStates';
 import { ZODIAC_SIGNS } from '@/lib/astro/zodiac';
 import type { ChartSummary } from '@/types/astro';
@@ -62,6 +63,10 @@ export function ResultView({ input, summary }: ResultViewProps) {
 
       <motion.div {...reveal(3)}>
         <ElementBalance summary={summary.elements} />
+      </motion.div>
+
+      <motion.div {...reveal(4)}>
+        <ReportTeaser />
       </motion.div>
 
       <div className="flex justify-center pt-2">

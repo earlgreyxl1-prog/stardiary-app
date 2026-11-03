@@ -1,15 +1,16 @@
+import { ASPECT_BODIES, findAspects } from '@/lib/astro/aspects';
 import { computeElementBalance } from '@/lib/astro/elements';
 import { computeNatalPositions, EphemerisError } from '@/lib/astro/engine';
 import { BirthTimeError } from '@/lib/astro/time';
 import { findBirthInputProblem } from '@/lib/birthGuards';
-import type { ChartApiResponse } from '@/types/astro';
+import type { BodyId, ChartApiResponse } from '@/types/astro';
 import type { BirthInput } from '@/types/birth';
 
 export interface ChartApiError {
   error: string;
 }
 
-/** POST /api/chart — BirthInput을 받아 천체 위치(NatalPositions)와 4원소 비율을 돌려준다. */
+/** POST /api/chart — BirthInput을 받아 천체 위치(NatalPositions), 4원소 비율, 애스펙트를 돌려준다. */
 export async function POST(request: Request): Promise<Response> {
   let body: unknown;
   try {
@@ -25,7 +26,14 @@ export async function POST(request: Request): Promise<Response> {
 
   try {
     const positions = computeNatalPositions(body as BirthInput);
-    const response: ChartApiResponse = { positions, elementBalance: computeElementBalance(positions) };
+    const longitudes = Object.fromEntries(
+      ASPECT_BODIES.map((body) => [body, positions.bodies[body].longitude]),
+    ) as Record<BodyId, number>;
+    const response: ChartApiResponse = {
+      positions,
+      elementBalance: computeElementBalance(positions),
+      aspects: findAspects(longitudes),
+    };
     return Response.json(response);
   } catch (error: unknown) {
     if (error instanceof BirthTimeError) {

@@ -61,7 +61,7 @@ src/
 └─ types/                     birth(BirthInput 등), city
 ```
 
-추가됨: `app/result/`, `components/result/`(PlacementCard, LockedRisingCard, ElementBalance, ResultStates, ResultView), `components/ui/MotionProvider`, `hooks/useChartResult`, `hooks/useSavedBirthInput`, `services/chartService`, `lib/astro/zodiac`(별자리·원소 사전 데이터), `mocks/chart`, `types/astro`(ChartSummary, NatalPositions 등), `app/api/chart/route.ts`, `lib/astro/engine`(서버 전용), `lib/astro/time`, `lib/birthGuards`(타입 가드 + 서버용 범위 검증), `lib/astro/elements`, `lib/astro/houses`, `app/api/geocode/route.ts`, `lib/geo/citySearch`(서버 전용 도시 검색 인덱스), `types/geonames`, `components/onboarding/GeoNamesAttribution`(출처 표기). 프로젝트 루트 `data/world-cities.geonames.json`(GeoNames 가공 데이터, 약 20MB, 생성물). `scripts/`(시뮬레이션·데이터 가공 스크립트), `docs/`(분포 보고서, 작가 안내). 결과 화면 구조(2026-10-18): `lib/summary/buildChartSummary`·`elementTitles`, `lib/content/`(rules·csv·convertContent), `lib/text/korean`(조사), `content/freeStage`(해석 문구, 지금은 AI 초안), `types/content`, `scripts/convert-content.ts`.
+추가됨: `app/result/`, `components/result/`(PlacementCard, LockedRisingCard, ElementBalance, ResultStates, ResultView), `components/ui/MotionProvider`, `hooks/useChartResult`, `hooks/useSavedBirthInput`, `services/chartService`, `lib/astro/zodiac`(별자리·원소 사전 데이터), `mocks/chart`, `types/astro`(ChartSummary, NatalPositions 등), `app/api/chart/route.ts`, `lib/astro/engine`(서버 전용), `lib/astro/time`, `lib/birthGuards`(타입 가드 + 서버용 범위 검증), `lib/astro/elements`, `lib/astro/houses`, `app/api/geocode/route.ts`, `lib/geo/citySearch`(서버 전용 도시 검색 인덱스), `types/geonames`, `components/onboarding/GeoNamesAttribution`(출처 표기). 프로젝트 루트 `data/world-cities.geonames.json`(GeoNames 가공 데이터, 약 20MB, 생성물). `scripts/`(시뮬레이션·데이터 가공 스크립트), `docs/`(분포 보고서, 작가 안내). 결과 화면 구조(2026-10-18): `lib/summary/buildChartSummary`·`elementTitles`, `lib/content/`(rules·csv·convertContent), `lib/text/korean`(조사), `content/freeStage`(해석 문구, 지금은 AI 초안), `types/content`, `scripts/convert-content.ts`. 유료 리포트(2026-11-03, 브랜치 `feat/paid-report`): `app/report/page.tsx`, `components/report/`(WheelChart, ReportSections, ReportStates, ReportView), `components/result/ReportTeaser`, `hooks/useNatalReport`·`useReportAccess`, `services/reportService`, `lib/astro/aspects`·`bodies`, `lib/report/`(buildReport, reportText, wheel, format), `content/paidStage`.
 
 ### 서비스 전체 목표 구조 (1·2단계 포함, `*`는 아직 없음)
 
@@ -114,6 +114,15 @@ src/
   - 상단 안내(`PreviewNotice`): 목업이면 "미리보기용 예시 결과", 실제 계산이지만 문구가 AI 초안이면 "해석 문구는 검수 전 임시 문구". 둘 다 아니면 숨는다.
   - **목업 장면 (개발용 닉네임)**: `!balanced`(균형형), `!tie`(불·흙 동점, 태양이 있는 흙 코멘트, 물 적음), `!lacking0`(적은 편 없음), `!lacking3`(적은 편 3개), 그 밖은 기본(물 강함·바람 적음). 출생 시간 모름으로 입력하면 상승궁·MC를 빼고 계산한다. `!error`는 그대로 에러 화면.
   - 브라우저 확인(375px): 다섯 장면 + 시간 모름 모두 의도대로, 가로 넘침·콘솔 오류 없음. AI 초안의 적은 편 코멘트가 제목("○○이 적은 편이에요")을 되풀이해 이어 붙이면 반복처럼 보이는 문제를 찾아 작가 안내(`docs/content-brief-elements.md`)에 "제목과 겹치지 않게"를 추가했다.
+- 완료 (2026-11-03, `feat/paid-report`): **2단계 유료 리포트 `/report`** — 실제 계산(`/api/chart`) 결과를 보여준다. 결제·로그인은 아직 없다(사용자 결정: 잠금 화면만).
+  - 진입: `/result` 맨 아래 `ReportTeaser` 카드 → `/report`. 상태: 로딩(Skeleton) / 빈 상태(입력 없음) / 잠금 / 에러(재시도·다시 입력) / 성공.
+  - 잠금(`ReportPaywall`): 포함 항목 4개 + 비활성 버튼 "정밀 리포트 열기 / 결제 기능을 준비하고 있어요". **개발 환경에서만** "개발용 잠금 해제" 버튼이 보인다(`REPORT_DEV_UNLOCK_AVAILABLE = NODE_ENV !== 'production'`, sessionStorage `stardiary:report-dev-unlocked:v1`). 리포트 하단 "개발용: 다시 잠그기"로 되돌린다. 잠금은 클라이언트 화면 처리일 뿐이고 `/api/chart`는 누구나 호출할 수 있다 — 결제를 붙일 때 서버에서 권한을 확인해야 한다.
+  - `useNatalReport`: 잠금이 풀렸을 때만 `reportService.getNatalReport()`(→ `/api/chart` → 응답 타입 가드 → `buildNatalReport`) 호출. settled-key 패턴 + AbortController.
+  - 화면 순서: 머리(ASC·MC 도수) → AI 초안 안내 → 시간 모름 안내(+ `/onboarding?step=time`) → 휠 차트 → 행성 10개(별자리·도수·하우스·역행·문구, 시간 모름이면 그날 별자리가 바뀐 천체에 안내) → 12하우스(시작선·들어 있는 행성·인터셉션, Porphyry/Whole Sign 대체 배지, 시간 모름이면 잠금 안내) → 애스펙트(정확도 순 상위 8개 + "모두 보기").
+  - 휠 차트(`WheelChart`, SVG): ASC를 왼쪽(9시)에 두고 황경이 반시계로 커진다(`wheelAngle`). 시간 모름이면 양자리 0°를 왼쪽에 둔다. 별자리 띠는 원소 색, 각 하우스(1·4·7·10) 시작선 강조, 애스펙트 선은 조화(파랑)·긴장(분홍 점선)·합(노랑)이고 정확할수록 진하다. 천체 기호는 `spreadLongitudes`로 9° 이상 벌려 겹치지 않게 하고 실제 위치는 눈금으로 표시. viewBox에 여백(PAD 16)을 둬 ASC·MC 글자가 잘리지 않게 했다.
+  - 문구: `content/paidStage.ts`(`PaidStageContent`, origin `'ai-draft'`) — **키워드 조합 AI 가안**(사용자 결정). 천체 테마 10 + 별자리 결 12 + 하우스 영역 12 + 애스펙트 5종 문장 틀. 행성: "{테마}이/가 {결} 드러나요. 특히 {영역}에서 그 기운이 잘 느껴져요."(시간 모름이면 둘째 문장 없음). 애스펙트: `{a|과/와} {b|이/가}` 조사 자리표시자(`fillTemplate`). 무료 단계와 마찬가지로 사용자가 나중에 고친다. 변환 스크립트·엑셀은 아직 없다.
+  - 브라우저 확인(375px): 서울 1995-08-23 06:40, 같은 날 시간 모름, 트롬쇠 1990-06-21 14:00(Porphyry 배지) — 가로 넘침·콘솔 오류 없음, "모두 보기/접기" 동작.
+  - 차트 파워(10번)는 이번에 넣지 않았다(사용자 결정).
 - 완료: `/onboarding` 재방문 시 저장된 값으로 폼을 채운다. `?step=time`처럼 단계를 지정해 들어올 수 있다(상승궁 잠금 카드의 링크가 사용). URL 해시는 클라이언트 이동 시 첫 렌더 뒤에 반영되므로 쓰지 않는다.
 - `prefers-reduced-motion`: CSS 애니메이션은 `globals.css`, framer-motion은 `MotionProvider`(`MotionConfig reducedMotion="user"`)가 처리한다.
 - 완료 (2026-10-17): **계산 어댑터 + `POST /api/chart`** (Swiss Ephemeris). 아직 결과 화면에는 연결하지 않았다(미결정 7·8 보류 중).
@@ -144,7 +153,9 @@ src/
 
 - 실행: `npm test`(한 번) / `npm run test:watch`(감시). 설정은 `vitest.config.mts`: `@/` 별칭, `server-only`를 빈 모듈(`test/stubs/server-only.ts`)로 바꿔 서버 코드를 Node에서 직접 테스트한다. 테스트 파일은 `src/**/*.test.ts`(대상 파일 옆).
 - `@types/node`를 ^24로 올렸다(vitest 5가 22 이상을 요구, 실제 Node도 24).
-- 범위 (374개, 결과 화면 구조 작업으로 35개 추가):
+- 범위 (398개, 결과 화면 구조 작업으로 35개, 유료 리포트로 24개 추가):
+  - `lib/astro/aspects.test.ts` — 각도 거리(0/360 경계), 종류별 orb와 해·달 가산 경계값, 한 쌍에 하나만, 정렬, 실제 차트
+  - `lib/report/report.test.ts` — 조사 자리표시자, 모든 천체×별자리×하우스·애스펙트 문구 조립(빈 자리표시자 없음), 시간 앎/모름/트롬쇠 리포트, 휠 각도·기호 벌리기
   - `lib/astro/elements.test.ts` — 가중치표, 사용자 예시 차트(15.5점), 시간 모름(12점), 정수 %·동점, 코멘트 규칙(균형형·강한 편 동점 양방향·적은 편 없음/0점 동점/한 원소 100%·정확한 비율 비교)
   - `lib/astro/houses.test.ts` — 하우스 판정(0° 경계·시작선), 인터셉션(사용자 예시), 엔진 통합(Placidus, 일출·정오·자정 태양 하우스, 트롬쇠·남극 Porphyry, 시간 모름 null), 위치 회귀(서울 1995 태양·ASC, 춘분일 ambiguousSigns, 수성 역행)
   - `lib/astro/time.test.ts` — 한국 UTC+9 / 서머타임 +10 / +8:30, 없는 시각 보정, 뉴욕·시드니·카트만두(+5:45), 잘못된 타임존 오류 문구
@@ -231,6 +242,7 @@ src/
    - 근거: 각도는 Wikipedia·Kerykeion과 일치한다. orb 숫자는 표준이 없고(여러 출처가 "단일 표준 없음"이라고 설명), 위 값은 Augurine·Wikipedia가 제시하는 범위 안의 조합이다. 해·달 가산(+1~2°)의 구체 수치는 어느 출처에도 없는 서비스 규칙이므로 UI·마케팅에서 "표준"이라고 표현하지 않는다. orb는 천문 계산이 아니라 점성술 해석상의 임계값이다.
    - 시뮬레이션(10천체 무작위 황경 가정): 이 표는 한 차트당 평균 약 14~15개 애스펙트가 잡힌다. 촘촘한 세트(합8·충8·삼각6·직각6·육각4)는 약 12개로 차이가 작다. 화면에서는 오차가 작은 순(정확도 순)으로 정렬해 상위 N개만 보여준다.
    - 각도 판정은 천문력 없이 두 황경의 차이로 하는 순수 함수다. 황경 입력은 `NatalPositions`에서 받는다.
+   - ✅ 구현 (2026-11-03): `lib/astro/aspects.ts`의 `ASPECT_DEFINITIONS`(위 표), `findAspects`(10천체 쌍, 한 쌍에 가장 정확한 각도 하나, 오차 작은 순). `/api/chart` 응답에 `aspects: Aspect[]`(a, b, type, separation, deviation, orb)를 더했다. 상승궁·MC와의 애스펙트는 넣지 않았다.
 7. ✅ **출생 시간을 모를 때 (2026-10-17 결정)**: **현지 정오 기준**으로 계산한 별자리 하나를 보여준다. 달·태양이 그날 별자리를 바꿔도 "두 별자리 중 하나"로 보여주지 않는다.
    - 엔진은 이미 정오 기준으로 계산한다(`UNKNOWN_TIME_HOUR = 12`). 원소 비율도 이 위치로 계산하고, 상승궁·MC는 뺀다(5번).
    - `ambiguousSigns`(그날 별자리가 바뀐 천체)는 계속 응답에 담는다. 지금 화면에서는 쓰지 않지만, 나중에 "출생 시간을 알면 달 별자리가 달라질 수 있어요" 같은 안내를 붙일 때 쓸 수 있다.
@@ -270,4 +282,4 @@ src/
 
 - 문구 검수(8번) 후: 편집 엑셀을 CSV로 저장해 `scripts/convert-content.ts`로 변환하고, `chartService.getChartSummary()`가 `/api/chart`를 호출해 `positions`(태양·달·상승궁)와 `elementBalance`를 `buildChartSummary`에 넘기도록 바꾼다(`source: 'computed'`). 화면 구조는 이미 준비돼 있다(2026-10-18).
 - 결과 카드 공유(이미지 저장) 기능
-- 2단계 유료 리포트(`/report`): 네이탈 휠 차트, 12하우스, 애스펙트
+- 유료 리포트 후속: 결제·로그인(서버에서 권한 확인), 유료 문구 검수 경로(엑셀·변환), 차트 파워(10번), 하우스 대체 시 리포트 안내 문구 다듬기
