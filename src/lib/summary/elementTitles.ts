@@ -3,8 +3,8 @@ import { joinWithAnd, josa } from '@/lib/text/korean';
 import type { ElementId, ElementSummaryView } from '@/types/astro';
 
 /**
- * 원소 코멘트 위에 붙는 제목. 문구(코멘트)는 작가가 쓰고, 제목은 서비스가 이 템플릿으로 만든다.
- * 동점일 때 원소를 모두 이름 붙이므로 작가에게 동점용 문구를 따로 받지 않는다(docs/content-brief-elements.md).
+ * 원소 코멘트 위에 붙는 제목. 문구(코멘트)는 콘텐츠(content/freeStage)에서 오고, 제목은 서비스가 이 템플릿으로 만든다.
+ * 동점일 때 원소를 모두 이름 붙이므로 동점용 문구를 따로 두지 않는다(docs/content-brief-elements.md).
  */
 export interface ElementTitles {
   /** 균형형 또는 강한 편 제목 */

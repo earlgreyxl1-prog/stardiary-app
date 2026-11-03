@@ -4,8 +4,8 @@ import { CONTENT_KEYS, convertContentTable, renderFreeStageModule, validateFreeS
 import { parseCsv } from '@/lib/content/csv';
 import type { FreeStageContent } from '@/types/content';
 
-/** AI 초안을 작가 시트 모양의 표로 펼친다 (변환 결과가 원본과 같아야 한다). */
-function sheetFrom(content: FreeStageContent, source = '작가'): string[][] {
+/** 문구를 편집 시트 모양의 표로 펼친다 (변환 결과가 원본과 같아야 한다). */
+function sheetFrom(content: FreeStageContent, source = '검수'): string[][] {
   const rows = [['키', '제목', '해석', '키워드', '코멘트', '출처']];
   for (const key of CONTENT_KEYS) {
     const [group, part, variant] = key.split('.');
@@ -46,10 +46,10 @@ describe('convertContentTable', () => {
     expect(CONTENT_KEYS).toHaveLength(45);
   });
 
-  it('정상 시트는 원본과 같은 문구로 돌아오고 origin은 writer', () => {
+  it('정상 시트는 원본과 같은 문구로 돌아오고 origin은 reviewed', () => {
     const result = convertContentTable(sheetFrom(FREE_STAGE_CONTENT));
     expect(result.issues.filter((issue) => issue.level === 'error')).toEqual([]);
-    expect(result.content).toEqual({ ...FREE_STAGE_CONTENT, origin: 'writer' });
+    expect(result.content).toEqual({ ...FREE_STAGE_CONTENT, origin: 'reviewed' });
   });
 
   it('영문 머리글·키워드 칸 3개도 받는다', () => {
@@ -58,12 +58,12 @@ describe('convertContentTable', () => {
         ? ['key', 'headline', 'description', 'keyword1', 'keyword2', 'keyword3', 'comment', 'source']
         : [row[0], row[1], row[2], ...(row[3] ? row[3].split(', ') : ['', '', '']), row[4], row[5]],
     );
-    expect(convertContentTable(table).content).toEqual({ ...FREE_STAGE_CONTENT, origin: 'writer' });
+    expect(convertContentTable(table).content).toEqual({ ...FREE_STAGE_CONTENT, origin: 'reviewed' });
   });
 
   it("출처가 'AI'로 시작하는 행이 있으면 거부한다", () => {
     const table = sheetFrom(FREE_STAGE_CONTENT);
-    table[1][5] = 'AI 예시';
+    table[1][5] = 'AI 가안';
     const result = convertContentTable(table);
     expect(result.content).toBeNull();
     expect(result.issues).toContainEqual(expect.objectContaining({ level: 'error', key: 'sun.aries' }));
@@ -71,7 +71,7 @@ describe('convertContentTable', () => {
 
   it('빠진 키·알 수 없는 키·중복 키', () => {
     const table = sheetFrom(FREE_STAGE_CONTENT).filter((row) => row[0] !== 'moon.leo');
-    table.push(['sun.ophiuchus', '뱀주인 제목입니다', '', '', '', '작가']);
+    table.push(['sun.ophiuchus', '뱀주인 제목입니다', '', '', '', '검수']);
     table.push([...table[1]]);
     const errors = errorsOf(table).map((issue) => `${issue.key}: ${issue.message}`);
     expect(errors).toEqual(
@@ -103,6 +103,12 @@ describe('convertContentTable', () => {
     expect(errorsOf(table).filter((issue) => issue.key === 'sun.cancer')).toEqual([]);
   });
 
+  it('CP949로 저장돼 한글이 깨진 CSV는 다시 저장하라고 알려준다', () => {
+    const result = convertContentTable([['��', '��'], ['sun.aries', '�']]);
+    expect(result.content).toBeNull();
+    expect(result.issues[0].message).toContain('CSV UTF-8');
+  });
+
   it("'키' 머리글이 없으면 찾은 머리글을 알려준다", () => {
     const result = convertContentTable([['구분', '내용'], ['a', 'b']]);
     expect(result.content).toBeNull();
@@ -131,10 +137,10 @@ describe('validateFreeStageContent', () => {
 
 describe('renderFreeStageModule', () => {
   it('타입이 붙은 모듈 소스를 만든다', () => {
-    const source = renderFreeStageModule({ ...FREE_STAGE_CONTENT, origin: 'writer' }, 'sheet.csv');
+    const source = renderFreeStageModule({ ...FREE_STAGE_CONTENT, origin: 'reviewed' }, 'sheet.csv');
     expect(source).toContain("import type { FreeStageContent } from '@/types/content';");
     expect(source).toContain('export const FREE_STAGE_CONTENT: FreeStageContent = {');
-    expect(source).toContain('"origin": "writer"');
+    expect(source).toContain('"origin": "reviewed"');
     expect(source).toContain('원본: sheet.csv');
   });
 });

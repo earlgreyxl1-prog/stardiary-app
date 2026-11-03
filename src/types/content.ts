@@ -1,7 +1,10 @@
 import type { BigThreeKey, ElementId, ZodiacSignId } from '@/types/astro';
 
-/** 문구 출처. 'ai-draft'는 작가 납품 전 임시 초안이고, 'writer'는 납품·검수를 마친 확정본이다. */
-export type ContentOrigin = 'ai-draft' | 'writer';
+/**
+ * 문구 출처. 'ai-draft'는 사람이 검수하기 전 AI 가안이고, 'reviewed'는 사람이 고쳐 확정한 문구다.
+ * (작가 협업이 무산되어 2026-10-19 'writer' → 'reviewed'로 바꿨다. 지금은 서비스 운영자가 직접 검수한다.)
+ */
+export type ContentOrigin = 'ai-draft' | 'reviewed';
 
 /** 태양·달·상승궁 한 칸의 해석 문구. 키워드는 항상 3개다. */
 export interface PlacementText {

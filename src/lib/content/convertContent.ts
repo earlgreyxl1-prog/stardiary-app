@@ -11,7 +11,8 @@ import type { BigThreeKey, ElementId, ZodiacSignId } from '@/types/astro';
 import type { ContentOrigin, ElementCommentSet, FreeStageContent, PlacementText } from '@/types/content';
 
 /**
- * 작가 입력 시트(CSV로 내보낸 것) → 무료 단계 해석 문구(FreeStageContent) 변환·검사.
+ * 문구 편집 시트(CSV로 내보낸 것) → 무료 단계 해석 문구(FreeStageContent) 변환·검사.
+ * 편집 시트: docs/content/free-stage-draft.xlsx (AI 가안을 사람이 고쳐 출처를 '검수'로 바꾼다).
  * 시트 키: sun.{sign} · moon.{sign} · rising.{sign} · element.{fire|earth|air|water}.{dominant|lacking} · element.balanced
  * ({sign}은 ZodiacSignId와 같다). 모두 45행.
  */
@@ -88,7 +89,7 @@ function countSentences(text: string): number {
   return text.split(/(?<=[.!?…])\s+/).filter((sentence) => sentence.trim() !== '').length;
 }
 
-/** 이미 만들어진 문구(작가 납품본·AI 초안 모두)를 규칙으로 검사한다. */
+/** 이미 만들어진 문구(검수본·AI 가안 모두)를 규칙으로 검사한다. */
 export function validateFreeStageContent(content: FreeStageContent): ContentIssue[] {
   const issues: ContentIssue[] = [];
   const rules = CONTENT_RULES.placement;
@@ -142,9 +143,22 @@ export function validateFreeStageContent(content: FreeStageContent): ContentIssu
 }
 
 /** CSV 표(머리글 포함)를 FreeStageContent로 바꾸고 검사한다. */
-export function convertContentTable(table: string[][], origin: ContentOrigin = 'writer'): ConversionResult {
+export function convertContentTable(table: string[][], origin: ContentOrigin = 'reviewed'): ConversionResult {
   const issues: ContentIssue[] = [];
   const columns = findColumns(table);
+  // 엑셀에서 'CSV(쉼표로 분리)'로 저장하면 한글이 CP949로 저장되어 UTF-8로 읽을 때 깨진다(U+FFFD).
+  if (table.some((row) => row.some((cell) => cell.includes('�')))) {
+    return {
+      content: null,
+      issues: [
+        {
+          level: 'error',
+          key: '-',
+          message: "한글이 깨져 있어요. 엑셀에서 '다른 이름으로 저장 → CSV UTF-8(쉼표로 분리)(*.csv)'로 다시 저장해 주세요",
+        },
+      ],
+    };
+  }
   if (!columns) {
     const found = (table[0] ?? []).join(', ') || '(비어 있음)';
     return {
@@ -171,7 +185,7 @@ export function convertContentTable(table: string[][], origin: ContentOrigin = '
       continue;
     }
     if (cell(row, 'source').toLowerCase().startsWith(AI_SOURCE_PREFIX)) {
-      issues.push({ level: 'error', key, message: `출처가 '${cell(row, 'source')}' — AI 예시 행이 남아 있어요. 작가 문구로 바꿔 주세요` });
+      issues.push({ level: 'error', key, message: `출처가 '${cell(row, 'source')}' — 아직 검수하지 않은 AI 가안이에요. 문구를 확인·수정한 뒤 출처를 '검수'로 바꿔 주세요` });
     }
     rowsByKey.set(key, row);
   }
@@ -235,8 +249,8 @@ export function renderFreeStageModule(content: FreeStageContent, sourceLabel: st
   return `import type { FreeStageContent } from '@/types/content';
 
 /**
- * 무료 단계 해석 문구 — 작가 납품본. scripts/convert-content.ts가 만든 파일이다.
- * 직접 고치지 말고 시트를 고친 뒤 다시 변환한다.
+ * 무료 단계 해석 문구 — 검수본. scripts/convert-content.ts가 만든 파일이다.
+ * 직접 고치지 말고 편집 시트(docs/content/free-stage-draft.xlsx)를 고친 뒤 다시 변환한다.
  * 원본: ${sourceLabel}
  */
 export const FREE_STAGE_CONTENT: FreeStageContent = ${JSON.stringify(content, null, 2)};

@@ -70,13 +70,13 @@ export function ResultEmpty() {
 interface PreviewNoticeProps {
   /** 결과가 입력과 무관한 예시인지 */
   mock: boolean;
-  /** 해석 문구가 작가 검수 전 임시 문구인지 */
+  /** 해석 문구가 사람이 검수하기 전 AI 가안인지 */
   draftContent: boolean;
 }
 
 /**
  * 아직 정식 결과가 아니라는 안내. 목업 결과이거나 해석 문구가 AI 초안이면 보여준다.
- * 실제 계산 + 작가 납품 문구가 되면 렌더링되지 않는다.
+ * 실제 계산 + 검수한 문구가 되면 렌더링되지 않는다.
  */
 export function PreviewNotice({ mock, draftContent }: PreviewNoticeProps) {
   if (!mock && !draftContent) return null;

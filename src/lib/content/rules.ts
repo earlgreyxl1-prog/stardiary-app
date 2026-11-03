@@ -1,5 +1,5 @@
 /**
- * 무료 단계 해석 문구 규칙 (작가 의뢰서 초안 기준, CLAUDE.md 8번 · docs/content-brief-elements.md).
+ * 무료 단계 해석 문구 규칙 (의뢰서 초안 기준, CLAUDE.md 8번 · docs/content-brief-elements.md).
  * 글자 수는 공백·문장부호를 포함한 글자(코드 포인트) 수다. 서비스가 최종 확정한 값이 아니므로 바뀌면 여기만 고친다.
  */
 export interface LengthRange {
@@ -36,7 +36,7 @@ export const ELEMENT_DISCOURAGED: Record<'dominant' | 'lacking' | 'balanced', re
   balanced: [],
 };
 
-/** 출처 칸이 이것으로 시작하면 작가 납품물이 아니라 AI 예시 행이다(시트에 sun.leo, element.fire.dominant 두 줄이 있다). */
+/** 출처 칸이 이것으로 시작하면 아직 사람이 검수하지 않은 AI 가안 행이다. 편집 시트는 모든 행이 'AI 가안'으로 시작한다. */
 export const AI_SOURCE_PREFIX = 'ai';
 
 export const textLength = (text: string): number => [...text].length;

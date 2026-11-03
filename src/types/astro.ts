@@ -1,3 +1,5 @@
+import type { ContentOrigin } from '@/types/content';
+
 export type ZodiacSignId =
   | 'aries'
   | 'taurus'
@@ -198,12 +200,12 @@ export interface ElementSummary {
 /**
  * 1단계 무료 결과. 목업이든 실제 계산이든 lib/summary/buildChartSummary로 만든다.
  * - source: 'mock'이면 입력과 무관한 예시 결과라고 화면에 안내한다.
- * - contentOrigin: 해석 문구 출처. 'ai-draft'면 작가 검수 전 임시 문구라고 안내한다.
+ * - contentOrigin: 해석 문구 출처. 'ai-draft'면 검수 전 임시 문구라고 안내한다.
  * - rising: 출생 시간을 모르면 계산할 수 없으므로 null
  */
 export interface ChartSummary {
   source: 'mock' | 'computed';
-  contentOrigin: 'ai-draft' | 'writer';
+  contentOrigin: ContentOrigin;
   sun: Placement;
   moon: Placement;
   rising: Placement | null;

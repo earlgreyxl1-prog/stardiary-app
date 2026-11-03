@@ -1,7 +1,9 @@
 /**
- * 작가 입력 시트 → src/content/freeStage.ts 변환.
+ * 문구 편집 시트 → src/content/freeStage.ts 변환.
+ * 편집 시트: docs/content/free-stage-draft.xlsx. 고친 행은 출처를 '검수'로 바꾼다('AI 가안'으로 남은 행이 있으면 변환하지 않는다).
  *
- * 1. 엑셀·구글 시트에서 '파일 → 다운로드/다른 이름으로 저장 → CSV(UTF-8)'로 내보낸다.
+ * 1. 엑셀: '다른 이름으로 저장 → CSV UTF-8(쉼표로 분리)(*.csv)'. 그냥 'CSV(쉼표로 분리)'는 한글이 깨진다.
+ *    구글 시트: '파일 → 다운로드 → 쉼표로 구분된 값(.csv)'.
  * 2. 검사만 (파일을 쓰지 않음):
  *      npx --yes tsx scripts/convert-content.ts <시트.csv>
  * 3. 오류가 없으면 덮어쓰기:
@@ -46,4 +48,4 @@ if (!outPath) {
 }
 
 writeFileSync(outPath, renderFreeStageModule(result.content, path.basename(inputPath)));
-console.log(`${outPath}에 썼어요 (origin: writer). npm test로 확인하세요.`);
+console.log(`${outPath}에 썼어요 (origin: reviewed). npm test로 확인하세요.`);
