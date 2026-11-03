@@ -4,7 +4,7 @@ import type { ChartApiResponse } from '@/types/astro';
 import type { BirthInput } from '@/types/birth';
 
 export class ReportError extends Error {
-  constructor(message = '정밀 리포트를 만들지 못했어요.') {
+  constructor(message = '정밀 차트를 만들지 못했어요.') {
     super(message);
     this.name = 'ReportError';
   }
@@ -30,9 +30,8 @@ function errorMessageOf(body: unknown): string | null {
 }
 
 /**
- * 유료 정밀 리포트를 가져온다: POST /api/chart(실제 계산) → 유료 문구로 조립.
- * 결제·로그인이 아직 없으므로 잠금은 화면에서만 건다(hooks/useReportAccess.ts). 결제를 붙일 때 이 함수가 서버의
- * 권한 확인을 거치도록 바꾼다.
+ * 정밀 차트를 가져온다: POST /api/chart(실제 계산) → 문구로 조립.
+ * 정밀 차트는 무료다(2026-11-03 결정). 유료 상품은 심화 리포트(services/deepReportService.ts)뿐이다.
  */
 export async function getNatalReport(input: BirthInput, signal?: AbortSignal): Promise<NatalReport> {
   const response = await fetch('/api/chart', {

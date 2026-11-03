@@ -39,7 +39,7 @@ export interface ReportAspect {
   text: string;
 }
 
-/** 유료 정밀 리포트 화면용 데이터 */
+/** 무료 정밀 차트 화면용 데이터 */
 export interface NatalReport {
   contentOrigin: ContentOrigin;
   timeUnknown: boolean;

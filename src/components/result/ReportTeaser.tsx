@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ChevronRight, Orbit } from 'lucide-react';
 
-/** 무료 결과 화면 아래의 정밀 리포트 안내 카드 */
+/** 무료 결과 화면 아래의 정밀 차트 안내 카드. 정밀 차트도 무료다. */
 export function ReportTeaser() {
   return (
     <Link
@@ -12,7 +12,10 @@ export function ReportTeaser() {
         <Orbit className="h-6 w-6" aria-hidden />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block font-bold text-white">정밀 리포트 보기</span>
+        <span className="block font-bold text-white">
+          정밀 차트 보기
+          <span className="ml-1.5 rounded-full bg-white/15 px-2 py-0.5 align-middle text-[11px] font-medium text-[#ffe9a8]">무료</span>
+        </span>
         <span className="mt-0.5 block text-xs leading-relaxed text-indigo-200/80">
           네이탈 휠 차트 · 행성 10개의 자리 · 12하우스 · 행성끼리 맺은 각도
         </span>

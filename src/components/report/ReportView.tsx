@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Lock } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
+import { DeepReportTeaser } from '@/components/deepReport/DeepReportTeaser';
 import { AspectSection, HouseSection, PlanetSection } from '@/components/report/ReportSections';
 import { WheelChart } from '@/components/report/WheelChart';
-import { REPORT_DEV_UNLOCK_AVAILABLE } from '@/hooks/useReportAccess';
 import { ZODIAC_SIGNS } from '@/lib/astro/zodiac';
 import type { NatalReport } from '@/lib/report/buildReport';
 import { formatDegreeMinutes } from '@/lib/report/format';
@@ -13,7 +13,6 @@ import type { BirthInput } from '@/types/birth';
 interface ReportViewProps {
   input: BirthInput;
   report: NatalReport;
-  onDevLock: () => void;
 }
 
 function formatBirth(input: BirthInput): string {
@@ -25,11 +24,11 @@ function formatBirth(input: BirthInput): string {
   return `${date} · ${time} · ${input.city.nameKo}`;
 }
 
-export function ReportView({ input, report, onDevLock }: ReportViewProps) {
+export function ReportView({ input, report }: ReportViewProps) {
   return (
     <div className="flex flex-col gap-5">
       <header className="text-center">
-        <p className="text-xs font-medium tracking-wide text-[#ffe9a8]">정밀 리포트</p>
+        <p className="text-xs font-medium tracking-wide text-[#ffe9a8]">무료 정밀 차트</p>
         <h1 className="mt-1 text-2xl font-bold text-white">{input.nickname}님의 네이탈 차트</h1>
         <p className="mt-1 text-sm text-indigo-200/70">{formatBirth(input)}</p>
         {report.angles && (
@@ -59,21 +58,13 @@ export function ReportView({ input, report, onDevLock }: ReportViewProps) {
       <HouseSection report={report} />
       <AspectSection report={report} />
 
-      <div className="flex flex-col items-center gap-3 pt-2">
+      <DeepReportTeaser />
+
+      <div className="flex justify-center pt-2">
         <Link href="/result" className="inline-flex items-center gap-1 text-sm text-indigo-200/80 transition hover:text-white">
           <ArrowLeft className="h-4 w-4" aria-hidden />
           무료 결과로 돌아가기
         </Link>
-        {REPORT_DEV_UNLOCK_AVAILABLE && (
-          <button
-            type="button"
-            onClick={onDevLock}
-            className="inline-flex items-center gap-1 text-xs text-indigo-200/50 transition hover:text-indigo-100"
-          >
-            <Lock className="h-3 w-3" aria-hidden />
-            개발용: 다시 잠그기
-          </button>
-        )}
       </div>
     </div>
   );

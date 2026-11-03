@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
   // swisseph-v2는 네이티브(.node) 모듈이라 번들하지 않고 런타임에 node_modules에서 불러온다.
   serverExternalPackages: ["swisseph-v2"],
+  // 동료에게 보여줄 때 쓰는 Cloudflare 임시 터널 주소에서도 개발 서버를 열 수 있게 한다.
+  allowedDevOrigins: ["*.trycloudflare.com"],
   // 서버리스 배포 시 런타임에 fs로 읽는 데이터 파일도 함께 올린다.
   outputFileTracingIncludes: {
     "/api/chart": ["./node_modules/swisseph-v2/ephe/**/*"], // 천문력

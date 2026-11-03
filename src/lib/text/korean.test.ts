@@ -17,6 +17,14 @@ describe('조사', () => {
     expect(josa('바다', '이에요/예요')).toBe('예요');
     expect(josa('바람', '이/가')).toBe('이');
   });
+
+  it('부르는 말과 반말 끝맺음 (달토리 말투)', () => {
+    expect(withJosa('별이', '아/야')).toBe('별이야');
+    expect(withJosa('하늘', '아/야')).toBe('하늘아');
+    expect(withJosa('태양', '이야/야')).toBe('태양이야');
+    expect(withJosa('수성', '이야/야')).toBe('수성이야');
+    expect(withJosa('달', '이야/야')).toBe('달이야');
+  });
 });
 
 describe('joinWithAnd', () => {

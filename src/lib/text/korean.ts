@@ -2,7 +2,7 @@
  * 한국어 조사 붙이기. 마지막 글자의 받침 유무로 고른다(한글이 아니면 받침 없음으로 본다).
  * 예: withJosa('불', '과/와') → '불과', withJosa('바다', '과/와') → '바다와'
  */
-export type JosaPair = '과/와' | '이/가' | '은/는' | '을/를' | '이에요/예요';
+export type JosaPair = '과/와' | '이/가' | '은/는' | '을/를' | '이에요/예요' | '아/야' | '이야/야';
 
 const HANGUL_START = 0xac00;
 const HANGUL_END = 0xd7a3;

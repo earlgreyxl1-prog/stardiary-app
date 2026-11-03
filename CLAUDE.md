@@ -8,7 +8,8 @@
 생소한 점성술을 MBTI처럼 친근하고 아기자기하게 제공해 진입장벽을 낮춘 뒤, 깊은 탐구를 원하는 유저에게 정밀 리포트를 제공한다.
 
 1. 1단계 (무료): 귀여운 캐릭터와 카드 뉴스 형태의 핵심 3대 요소(태양/달/상승궁) 요약, 4대 요소(불/흙/바람/물) 분석
-2. 2단계 (유료/상세): 네이탈 차트(Wheel Chart), 12개 하우스 해석, 행성 간 각도(Aspect)를 시각화한 정밀 진단 대시보드
+2. 2단계 (무료, 2026-11-03 변경): 정밀 차트 `/report` — 네이탈 차트(Wheel Chart), 12개 하우스, 행성 간 각도(Aspect)
+3. 3단계 (유료): 심화 리포트 `/report/deep` — 주제(장)별 긴 해설. 주제 하나씩 또는 네 주제 묶음으로 산다.
 
 ## 기술 스택
 
@@ -61,7 +62,7 @@ src/
 └─ types/                     birth(BirthInput 등), city
 ```
 
-추가됨: `app/result/`, `components/result/`(PlacementCard, LockedRisingCard, ElementBalance, ResultStates, ResultView), `components/ui/MotionProvider`, `hooks/useChartResult`, `hooks/useSavedBirthInput`, `services/chartService`, `lib/astro/zodiac`(별자리·원소 사전 데이터), `mocks/chart`, `types/astro`(ChartSummary, NatalPositions 등), `app/api/chart/route.ts`, `lib/astro/engine`(서버 전용), `lib/astro/time`, `lib/birthGuards`(타입 가드 + 서버용 범위 검증), `lib/astro/elements`, `lib/astro/houses`, `app/api/geocode/route.ts`, `lib/geo/citySearch`(서버 전용 도시 검색 인덱스), `types/geonames`, `components/onboarding/GeoNamesAttribution`(출처 표기). 프로젝트 루트 `data/world-cities.geonames.json`(GeoNames 가공 데이터, 약 20MB, 생성물). `scripts/`(시뮬레이션·데이터 가공 스크립트), `docs/`(분포 보고서, 작가 안내). 결과 화면 구조(2026-10-18): `lib/summary/buildChartSummary`·`elementTitles`, `lib/content/`(rules·csv·convertContent), `lib/text/korean`(조사), `content/freeStage`(해석 문구, 지금은 AI 초안), `types/content`, `scripts/convert-content.ts`. 유료 리포트(2026-11-03, 브랜치 `feat/paid-report`): `app/report/page.tsx`, `components/report/`(WheelChart, ReportSections, ReportStates, ReportView), `components/result/ReportTeaser`, `hooks/useNatalReport`·`useReportAccess`, `services/reportService`, `lib/astro/aspects`·`bodies`, `lib/report/`(buildReport, reportText, wheel, format), `content/paidStage`.
+추가됨: `app/result/`, `components/result/`(PlacementCard, LockedRisingCard, ElementBalance, ResultStates, ResultView), `components/ui/MotionProvider`, `hooks/useChartResult`, `hooks/useSavedBirthInput`, `services/chartService`, `lib/astro/zodiac`(별자리·원소 사전 데이터), `mocks/chart`, `types/astro`(ChartSummary, NatalPositions 등), `app/api/chart/route.ts`, `lib/astro/engine`(서버 전용), `lib/astro/time`, `lib/birthGuards`(타입 가드 + 서버용 범위 검증), `lib/astro/elements`, `lib/astro/houses`, `app/api/geocode/route.ts`, `lib/geo/citySearch`(서버 전용 도시 검색 인덱스), `types/geonames`, `components/onboarding/GeoNamesAttribution`(출처 표기). 프로젝트 루트 `data/world-cities.geonames.json`(GeoNames 가공 데이터, 약 20MB, 생성물). `scripts/`(시뮬레이션·데이터 가공 스크립트), `docs/`(분포 보고서, 작가 안내). 결과 화면 구조(2026-10-18): `lib/summary/buildChartSummary`·`elementTitles`, `lib/content/`(rules·csv·convertContent), `lib/text/korean`(조사), `content/freeStage`(해석 문구, 지금은 AI 초안), `types/content`, `scripts/convert-content.ts`. 유료 리포트(2026-11-03, 브랜치 `feat/paid-report`): `app/report/page.tsx`, `components/report/`(WheelChart, ReportSections, ReportStates, ReportView), `components/result/ReportTeaser`, `hooks/useNatalReport`·`useReportAccess`, `services/reportService`, `lib/astro/aspects`·`bodies`, `lib/report/`(buildReport, reportText, wheel, format), `content/paidStage`. 심화 리포트(2026-11-03, 브랜치 `feat/deep-report-mockups`): `app/report/deep/page.tsx`, `components/deepReport/`(DeepReportView, DeepReportStates(Skeleton·에러·상품 고르기), DeepShared, DeepReportTeaser), `hooks/useDeepReport`·`useDeepReportAccess`, `services/deepReportService`, `lib/deepReport/products`, `mocks/deepReport`, `types/deepReport`.
 
 ### 서비스 전체 목표 구조 (1·2단계 포함, `*`는 아직 없음)
 
@@ -114,15 +115,29 @@ src/
   - 상단 안내(`PreviewNotice`): 목업이면 "미리보기용 예시 결과", 실제 계산이지만 문구가 AI 초안이면 "해석 문구는 검수 전 임시 문구". 둘 다 아니면 숨는다.
   - **목업 장면 (개발용 닉네임)**: `!balanced`(균형형), `!tie`(불·흙 동점, 태양이 있는 흙 코멘트, 물 적음), `!lacking0`(적은 편 없음), `!lacking3`(적은 편 3개), 그 밖은 기본(물 강함·바람 적음). 출생 시간 모름으로 입력하면 상승궁·MC를 빼고 계산한다. `!error`는 그대로 에러 화면.
   - 브라우저 확인(375px): 다섯 장면 + 시간 모름 모두 의도대로, 가로 넘침·콘솔 오류 없음. AI 초안의 적은 편 코멘트가 제목("○○이 적은 편이에요")을 되풀이해 이어 붙이면 반복처럼 보이는 문제를 찾아 작가 안내(`docs/content-brief-elements.md`)에 "제목과 겹치지 않게"를 추가했다.
-- 완료 (2026-11-03, `feat/paid-report`): **2단계 유료 리포트 `/report`** — 실제 계산(`/api/chart`) 결과를 보여준다. 결제·로그인은 아직 없다(사용자 결정: 잠금 화면만).
-  - 진입: `/result` 맨 아래 `ReportTeaser` 카드 → `/report`. 상태: 로딩(Skeleton) / 빈 상태(입력 없음) / 잠금 / 에러(재시도·다시 입력) / 성공.
-  - 잠금(`ReportPaywall`): 포함 항목 4개 + 비활성 버튼 "정밀 리포트 열기 / 결제 기능을 준비하고 있어요". **개발 환경에서만** "개발용 잠금 해제" 버튼이 보인다(`REPORT_DEV_UNLOCK_AVAILABLE = NODE_ENV !== 'production'`, sessionStorage `stardiary:report-dev-unlocked:v1`). 리포트 하단 "개발용: 다시 잠그기"로 되돌린다. 잠금은 클라이언트 화면 처리일 뿐이고 `/api/chart`는 누구나 호출할 수 있다 — 결제를 붙일 때 서버에서 권한을 확인해야 한다.
-  - `useNatalReport`: 잠금이 풀렸을 때만 `reportService.getNatalReport()`(→ `/api/chart` → 응답 타입 가드 → `buildNatalReport`) 호출. settled-key 패턴 + AbortController.
-  - 화면 순서: 머리(ASC·MC 도수) → AI 초안 안내 → 시간 모름 안내(+ `/onboarding?step=time`) → 휠 차트 → 행성 10개(별자리·도수·하우스·역행·문구, 시간 모름이면 그날 별자리가 바뀐 천체에 안내) → 12하우스(시작선·들어 있는 행성·인터셉션, Porphyry/Whole Sign 대체 배지, 시간 모름이면 잠금 안내) → 애스펙트(정확도 순 상위 8개 + "모두 보기").
+- 완료 (2026-11-03, `feat/paid-report`): **정밀 차트 `/report`** — 실제 계산(`/api/chart`) 결과를 보여준다. 처음에는 유료(잠금 화면)로 만들었지만 같은 날 **무료로 바꿨다**(아래 '리포트 상품 구조').
+  - 진입: `/result` 맨 아래 `ReportTeaser`("정밀 차트 보기 · 무료") → `/report`. 상태: 로딩(Skeleton) / 빈 상태(입력 없음) / 에러(재시도·다시 입력) / 성공. 맨 아래 `DeepReportTeaser` → `/report/deep`.
+  - 잠금 화면(`ReportPaywall`)과 `useReportAccess`는 무료 전환 때 지웠다.
+  - `useNatalReport`: `reportService.getNatalReport()`(→ `/api/chart` → 응답 타입 가드 → `buildNatalReport`) 호출. settled-key 패턴 + AbortController.
+  - 화면 순서: 머리("무료 정밀 차트", ASC·MC 도수) → AI 초안 안내 → 시간 모름 안내(+ `/onboarding?step=time`) → 휠 차트 → 행성 10개(별자리·도수·하우스·역행·문구, 시간 모름이면 그날 별자리가 바뀐 천체에 안내) → 12하우스(시작선·들어 있는 행성·인터셉션, Porphyry/Whole Sign 대체 배지, 시간 모름이면 잠금 안내) → 애스펙트(정확도 순 상위 8개 + "모두 보기").
   - 휠 차트(`WheelChart`, SVG): ASC를 왼쪽(9시)에 두고 황경이 반시계로 커진다(`wheelAngle`). 시간 모름이면 양자리 0°를 왼쪽에 둔다. 별자리 띠는 원소 색, 각 하우스(1·4·7·10) 시작선 강조, 애스펙트 선은 조화(파랑)·긴장(분홍 점선)·합(노랑)이고 정확할수록 진하다. 천체 기호는 `spreadLongitudes`로 9° 이상 벌려 겹치지 않게 하고 실제 위치는 눈금으로 표시. viewBox에 여백(PAD 16)을 둬 ASC·MC 글자가 잘리지 않게 했다.
   - 문구: `content/paidStage.ts`(`PaidStageContent`, origin `'ai-draft'`) — **키워드 조합 AI 가안**(사용자 결정). 천체 테마 10 + 별자리 결 12 + 하우스 영역 12 + 애스펙트 5종 문장 틀. 행성: "{테마}이/가 {결} 드러나요. 특히 {영역}에서 그 기운이 잘 느껴져요."(시간 모름이면 둘째 문장 없음). 애스펙트: `{a|과/와} {b|이/가}` 조사 자리표시자(`fillTemplate`). 무료 단계와 마찬가지로 사용자가 나중에 고친다. 변환 스크립트·엑셀은 아직 없다.
   - 브라우저 확인(375px): 서울 1995-08-23 06:40, 같은 날 시간 모름, 트롬쇠 1990-06-21 14:00(Porphyry 배지) — 가로 넘침·콘솔 오류 없음, "모두 보기/접기" 동작.
   - 차트 파워(10번)는 이번에 넣지 않았다(사용자 결정).
+- **리포트 상품 구조 (2026-11-03 사용자 결정)**: 제안했던 ②(기본 리포트를 무료에 포함, 심화만 판매)와 ③(주제별 낱개)을 합쳤다.
+  - 무료: `/result`(태양·달·상승궁, 4원소) + `/report`(정밀 차트: 휠·행성·하우스·애스펙트).
+  - 유료: 심화 리포트 `/report/deep`. 판매 단위는 주제(장) 4개 — 나라는 사람(`self`)·사랑과 관계(`love`)·일과 방향(`work`)·성장 포인트(`growth`) — 와 네 주제 묶음(`bundle`). 상품 정의는 `lib/deepReport/products.ts` 한 곳(`DEEP_CHAPTER_PRODUCTS`, `DEEP_BUNDLE_PRODUCT`, `grantProduct`, `pickOwnedChapters`).
+  - 가격·결제 수단은 미정이다(원화·웹 전용·토스페이먼츠 등을 검토했지만 사용자: "Not yet"). 묶음 할인도 정하지 않았으니 화면에 할인을 약속하는 문구를 쓰지 않는다. 사주·운세는 여러 PG가 유의업종으로 심사한다.
+- 완료 (2026-11-03, `feat/deep-report-mockups`): **심화 리포트 `/report/deep` (목업 해설)** — 디자인은 시안 A '읽는 리포트' + 요약 카드(사용자 결정). B(한눈에 보기)·C(달토리와 함께) 시안과 비교 페이지(`/report/deep/preview`)는 지웠다.
+  - 상태: 로딩(Skeleton) / 빈 상태(입력 없음) / 상품 고르기(산 장 없음) / 에러(재시도·정밀 차트로) / 성공. `useDeepReport`는 산 장이 있을 때만 `deepReportService.getDeepReport(input, owned, signal)`을 부른다(settled-key + AbortController). 닉네임 `!error`면 에러 화면.
+  - 상품 고르기(`DeepReportStore`): 묶음 카드 → 주제 카드 4개. 사기 전에는 개인 해설을 보여주지 않는다(설명은 일반 소개 문구).
+  - 리포트(`DeepReportView`): 표지(한 줄 제목·요약·키워드) → **한눈에 보기** 카드(장별 한 줄 요약 겸 목차, "n/4장 열림", 잠긴 장은 자물쇠) → 힘센 별 TOP 3 → 장마다 큰 번호 + **핵심만 먼저** 요약 카드 → 긴 글 → 인용구 → 이번 주에 해 볼 것 → 근거 보기. 사지 않은 장은 같은 자리에 잠금 카드(그 주제만 열기). 다 사지 않았으면 맺음말 앞에 묶음 안내.
+  - 구매 상태(`useDeepReportAccess`): 결제가 없어 운영에서는 산 장이 항상 없고 구매 버튼은 "결제 기능을 준비하고 있어요"로 비활성. **개발 환경에서만** "개발용으로 열기"(sessionStorage `stardiary:deep-report-dev-owned:v1`, JSON 배열을 `parseOwnedChapters`로 좁힘)와 하단 "개발용: 구매 기록 지우기"가 보인다. 결제를 붙이면 서버에서 구매를 확인하고, 심화 리포트 생성 API도 산 장만 만들어 돌려줘야 한다.
+  - `DeepReport.chapters`에는 산 장만 들어 있다. 표지·힘센 별·맺음말은 한 장이라도 사면 보인다.
+  - 해설은 입력과 무관한 목업(`mocks/deepReport.ts`, `source: 'mock'`; 위치·각도는 서울 1995-08-23 06:40 실제 계산값, 해설·차트 파워 점수는 손으로 쓴 예시)이고 화면 맨 위에 그렇게 안내한다. AI 생성은 사용자가 해석 규칙 문서를 정리한 뒤 다시 논의한다. 차트 파워 TOP 3 계산은 10번이 정해지기 전에는 만들지 않는다.
+  - 조사 `lib/text/korean`에 '아/야'·'이야/야'가 있다(시안 C용으로 더했고, 지금은 쓰는 곳이 없다).
+  - 브라우저 확인(375px): 정밀 차트에 잠금 없음·심화 안내 카드, 상품 고르기 → 한 장 열기(1/4, 잠금 카드 3개, 묶음 안내) → 묶음(4/4, 묶음 안내 사라짐) → 근거 보기 → 구매 기록 지우기(상품 고르기로), `!error` 에러·재시도, 빈 상태 — 가로 넘침·콘솔 오류 없음.
+- 동료 미리보기: `cloudflared` 임시 터널(`cloudflared tunnel --url http://localhost:3000`, 주소 `*.trycloudflare.com`은 켤 때마다 바뀜)로 개발 서버를 보여준다. `next.config.ts`의 `allowedDevOrigins: ["*.trycloudflare.com"]`가 있어야 개발 서버가 터널 주소의 요청을 받는다. PC와 개발 서버가 켜져 있는 동안만 열린다.
 - 완료: `/onboarding` 재방문 시 저장된 값으로 폼을 채운다. `?step=time`처럼 단계를 지정해 들어올 수 있다(상승궁 잠금 카드의 링크가 사용). URL 해시는 클라이언트 이동 시 첫 렌더 뒤에 반영되므로 쓰지 않는다.
 - `prefers-reduced-motion`: CSS 애니메이션은 `globals.css`, framer-motion은 `MotionProvider`(`MotionConfig reducedMotion="user"`)가 처리한다.
 - 완료 (2026-10-17): **계산 어댑터 + `POST /api/chart`** (Swiss Ephemeris). 아직 결과 화면에는 연결하지 않았다(미결정 7·8 보류 중).
@@ -140,7 +155,8 @@ src/
 
 ## 저장소 (git)
 
-- 2026-10-17 시작. 첫 커밋 `4e2d492`(main). 원격 저장소는 아직 없다(GitHub 등에 올릴지 미정).
+- 2026-10-17 시작. 첫 커밋 `4e2d492`(main).
+- 원격 (2026-11-03): GitHub **비공개** 저장소 `earlgreyxl1-prog/stardiary-app`(`origin`, https). 공개로 바꾸지 않는다(Swiss Ephemeris 라이선스 미결, 1번). GitHub CLI는 winget으로 설치했고(`C:\Program Files\GitHub CLI\gh.exe`, 새 터미널부터 PATH에 잡힘) `earlgreyxl1-prog` 계정으로 로그인돼 있다. 푸시도 커밋과 마찬가지로 사용자가 요청할 때만 한다.
 - 커밋 작성자는 이 저장소에만 설정했다(`git config user.name earlgreyxl1`, `user.email (개인 메일)`). 전역 git 설정은 건드리지 않았다.
 - 작업은 브랜치에서 하고 main에 합친다. 커밋·푸시는 사용자가 요청할 때만 한다.
 - 포함하는 것: 소스, `scripts/`, `docs/`, `.claude/launch.json`, 생성 데이터 `data/world-cities.geonames.json`(약 23MB, 사용자 결정: 배포·다른 PC에서 바로 동작하도록 커밋). 데이터를 다시 만들 때마다 저장소가 약 23MB씩 커지므로 자주 다시 만들지 않는다.
@@ -153,7 +169,8 @@ src/
 
 - 실행: `npm test`(한 번) / `npm run test:watch`(감시). 설정은 `vitest.config.mts`: `@/` 별칭, `server-only`를 빈 모듈(`test/stubs/server-only.ts`)로 바꿔 서버 코드를 Node에서 직접 테스트한다. 테스트 파일은 `src/**/*.test.ts`(대상 파일 옆).
 - `@types/node`를 ^24로 올렸다(vitest 5가 22 이상을 요구, 실제 Node도 24).
-- 범위 (398개, 결과 화면 구조 작업으로 35개, 유료 리포트로 24개 추가):
+- 범위 (405개, 결과 화면 구조 작업으로 35개, 유료 리포트로 24개, 달토리 조사로 1개, 심화 리포트 상품으로 6개 추가):
+  - `lib/deepReport/products.test.ts` — 주제·묶음이 여는 장, 상품과 목업 장의 제목 일치, 정렬·중복 제거, 구매 기록 파싱(잘못된 형식은 빈 목록), 산 장만 남기기
   - `lib/astro/aspects.test.ts` — 각도 거리(0/360 경계), 종류별 orb와 해·달 가산 경계값, 한 쌍에 하나만, 정렬, 실제 차트
   - `lib/report/report.test.ts` — 조사 자리표시자, 모든 천체×별자리×하우스·애스펙트 문구 조립(빈 자리표시자 없음), 시간 앎/모름/트롬쇠 리포트, 휠 각도·기호 벌리기
   - `lib/astro/elements.test.ts` — 가중치표, 사용자 예시 차트(15.5점), 시간 모름(12점), 정수 %·동점, 코멘트 규칙(균형형·강한 편 동점 양방향·적은 편 없음/0점 동점/한 원소 100%·정확한 비율 비교)
@@ -282,4 +299,5 @@ src/
 
 - 문구 검수(8번) 후: 편집 엑셀을 CSV로 저장해 `scripts/convert-content.ts`로 변환하고, `chartService.getChartSummary()`가 `/api/chart`를 호출해 `positions`(태양·달·상승궁)와 `elementBalance`를 `buildChartSummary`에 넘기도록 바꾼다(`source: 'computed'`). 화면 구조는 이미 준비돼 있다(2026-10-18).
 - 결과 카드 공유(이미지 저장) 기능
-- 유료 리포트 후속: 결제·로그인(서버에서 권한 확인), 유료 문구 검수 경로(엑셀·변환), 차트 파워(10번), 하우스 대체 시 리포트 안내 문구 다듬기
+- 심화 리포트 후속: 가격·결제·로그인(서버에서 구매 확인), 해석 규칙 문서(사용자 작성) → AI 생성(산 장만 생성·저장), 차트 파워(10번)
+- 정밀 차트 후속: 문구 검수 경로(엑셀·변환), 하우스 대체 시 안내 문구 다듬기
