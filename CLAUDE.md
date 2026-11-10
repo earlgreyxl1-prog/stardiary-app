@@ -210,14 +210,14 @@ src/
    - 네이티브 모듈이라 Windows 로컬 개발에는 Visual Studio Build Tools(C++ 데스크톱 개발)가 필요하다.
    - 라이선스: AGPL 또는 상용. 유료 서비스로 공개하기 전에 상용 라이선스 구매 또는 소스 공개 중 하나를 정해야 한다(미결).
    - 시간 변환은 `luxon`(설치됨)으로 현지 시각 → UTC를 구한 뒤 Swiss Ephemeris에 넘긴다.
-   - `swisseph-v2` 패키지 코드 자체는 GPL v2다. 위 Swiss Ephemeris 라이선스 결정 때 같이 확인한다.
+   - `swisseph-v2` 패키지 코드 자체는 LICENSE 파일 기준 GPL v2(또는 이후 버전)다.
    - **라이선스 결정 기준 (2026-10-17 정리, 미결 유지)**: Astrodienst 안내 페이지(https://www.astro.com/swisseph/swephinfo_e.htm)는 라이선스를 "공개 서비스를 시작하기 전에" 골라야 한다고 적고 있다. 개발 중인 지금은 막지 않고, **공개 베타/출시 전까지의 게이트**로 둔다.
      - A. AGPL 채택: 프로젝트 전체를 AGPL(또는 호환 라이선스)로 공개해야 한다고 안내 페이지에 적혀 있다.
      - B. 상용(Professional) 라이선스: Astrodienst와 계약한다. 가격·적용 범위는 안내 페이지에 없어 확인하지 못했다 → 구매 페이지 또는 order@astro.com에서 확인한다.
      - C. MIT 라이선스 라이브러리로 교체: `astronomy-engine`(MIT, 태양~명왕성, 정확도 ±1 arcminute ≈ 0.017°). 트로피컬 황경 변환 지원 여부와 상승궁·하우스 계산은 확인하지 못했으므로 직접 구현·검증이 필요하다. 별자리 경계 근처 오차를 기존 검증 기준(0.015°)과 비교해 본다.
      - 지금 할 일: 개발은 계속한다. 계산을 `lib/astro/engine` 어댑터 뒤에 가둔 구조를 유지하고, Swiss Ephemeris 타입이 어댑터 밖으로 새지 않게 한다. 상용 라이선스 가격 문의 메일을 미리 보낸다.
      - ✅ **결정 (2026-11-10): A. AGPL** — 포트폴리오 공개 배포를 위해 프로젝트 전체를 AGPL-3.0-or-later로 공개한다(저장소 공개 + 화면 아래 소스 링크). 유료 버전을 열 때 소스 공개를 원하지 않으면 그때 B(상용 라이선스)로 바꾼다.
-     - 확인 필요: `swisseph-v2`의 LICENSE 파일은 GPL v2 원문인데 README는 "라이선스는 Swiss Ephemeris와 같다"고 적는다. AGPL과 함께 써도 되는지 사용자가 직접 확인하기로 했다.
+     - `swisseph-v2` 라이선스 (2026-11-10 사용자 결정): README의 "라이선스는 Swiss Ephemeris와 같다" 문구는 무시하고 **LICENSE 파일(GPL v2 또는 이후 버전)을 기준**으로 본다. 다시 문제 삼지 않는다.
      - 이 정리는 법률 자문이 아니다. 출시 전에 라이선스 해석을 직접 확인한다.
 2. ✅ **도시 검색 / 지오코딩 (2026-10-17 결정)**: 외부 지오코딩 API 대신 **GeoNames 정적 데이터 + 서버 검색 API** (`GET /api/geocode?q=`).
    - 데이터: `data/world-cities.geonames.json` (약 23MB, 242,892행) — GeoNames cities500(인구 500명 이상 또는 행정 중심지) 236,278개 도시 + 국내 행정구역. 246개 국가·지역, 394개 IANA 타임존(전부 Luxon에서 열림), 위도 54.9°S~78.2°N. 행마다 `kind`(city / admin / extra). 만드는 법(원본 다운로드 포함)은 `scripts/build-world-cities.ts` 머리말(`--kr KR.txt` 필수). 생성물이라 저장소에 넣을지는 git을 붙일 때 정한다.
