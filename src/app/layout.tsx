@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Noto_Sans_KR } from 'next/font/google';
 import { MotionProvider } from '@/components/ui/MotionProvider';
+import { SiteFooter } from '@/components/ui/SiteFooter';
 import './globals.css';
 
 const notoSansKr = Noto_Sans_KR({
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="ko">
       <body className={`${notoSansKr.className} min-h-dvh bg-[#14112e] text-indigo-50 antialiased`}>
         <MotionProvider>{children}</MotionProvider>
+        <SiteFooter />
       </body>
     </html>
   );

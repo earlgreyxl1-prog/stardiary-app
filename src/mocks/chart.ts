@@ -1,9 +1,9 @@
 import type { ElementPointSource, ZodiacSignId } from '@/types/astro';
 
 /**
- * 결과 화면 확인용 목업 차트. 입력한 생년월일과 무관한 고정 배치다.
+ * 결과 화면 확인용 목업 차트. 입력한 생년월일과 무관한 고정 배치다. **개발 환경에서만** 쓴다(chartService).
  * 원소 비율·코멘트는 실제와 같은 함수(computeElementBalanceFromSigns → buildChartSummary)로 만든다.
- * 닉네임으로 장면을 고를 수 있다(목업 전용): '!balanced' '!tie' '!lacking0' '!lacking3'. 그 밖에는 기본 장면.
+ * 닉네임으로 장면을 고른다: '!mock'(기본) '!balanced' '!tie' '!lacking0' '!lacking3'. 다른 닉네임은 실제 계산을 쓴다.
  * 출생 시간을 모른다고 입력하면 상승궁·MC를 빼고 계산한다.
  */
 export interface MockChart {
@@ -110,13 +110,14 @@ export const MOCK_CHARTS: Record<MockChartId, MockChart> = {
 };
 
 const MOCK_NICKNAMES: Record<string, MockChartId> = {
+  '!mock': 'default',
   '!balanced': 'balanced',
   '!tie': 'tie',
   '!lacking0': 'lacking0',
   '!lacking3': 'lacking3',
 };
 
-/** 닉네임으로 목업 장면을 고른다. 해당 없으면 기본 장면. */
-export function pickMockChart(nickname: string): MockChartId {
-  return MOCK_NICKNAMES[nickname.trim()] ?? 'default';
+/** 닉네임으로 목업 장면을 고른다. 목업 닉네임이 아니면 null(실제 계산을 쓴다). */
+export function findMockChart(nickname: string): MockChartId | null {
+  return MOCK_NICKNAMES[nickname.trim()] ?? null;
 }

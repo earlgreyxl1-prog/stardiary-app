@@ -22,7 +22,7 @@ type SettledChart =
   | { key: string; status: 'success'; summary: ChartSummary }
   | { key: string; status: 'error' };
 
-/** sessionStorage의 출생 정보를 읽어 1단계 결과를 가져온다. */
+/** sessionStorage의 출생 정보를 읽어 1단계 결과(실제 계산)를 가져온다. */
 export function useChartResult(): UseChartResult {
   const saved = useSavedBirthInput();
   const input = saved.hydrated ? saved.input : null;
@@ -35,7 +35,8 @@ export function useChartResult(): UseChartResult {
     if (input === null) return;
 
     let cancelled = false;
-    getChartSummary(input)
+    const controller = new AbortController();
+    getChartSummary(input, controller.signal)
       .then((summary) => {
         if (!cancelled) setSettled({ key: requestKey, status: 'success', summary });
       })
@@ -45,6 +46,7 @@ export function useChartResult(): UseChartResult {
 
     return () => {
       cancelled = true;
+      controller.abort();
     };
   }, [input, requestKey]);
 

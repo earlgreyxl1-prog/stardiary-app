@@ -101,19 +101,19 @@ src/
   - 날짜는 양력 기준. 음력 입력은 지원하지 않는다(안내 문구만 있음).
 - 검증 완료 (2026-10-17): `tsc`, `lint`, `build` 통과. Next.js 16 / React 19 / Tailwind v4 기준.
   - `react-hooks/set-state-in-effect` 규칙 때문에 effect 안에서 동기로 setState 하지 않는다. 비동기 결과는 `{ key, ... }` 형태로 저장하고, 현재 요청 key와 비교해 로딩 상태를 파생한다(`useCitySearch`, `useChartResult` 참고).
-- 완료: `/result` 무료 결과 페이지 (**Mock Data**)
+- 완료: `/result` 무료 결과 페이지 — **2026-11-10부터 실제 계산**(아래 '공개 배포 준비')
   - `useChartResult` → sessionStorage를 `useSyncExternalStore`로 읽고 `chartService.getChartSummary()` 호출
   - 상태: 로딩(Skeleton) / 빈 상태(온보딩으로) / 에러(재시도) / 성공. 닉네임을 `!error`로 입력하면 에러 UI를 확인할 수 있다.
   - 태양/달/상승궁 뒤집기 카드, 4원소 막대, `timeUnknown`이면 상승궁 잠금 카드
   - 레이아웃은 세로로 쌓인 카드로 확정했다(2026-10-17 사용자 결정). 좌우 스와이프 카드 뉴스로 바꾸지 않는다.
-  - 결과 값은 입력과 무관한 고정 목업(`mocks/chart.ts`)이고, 화면 상단에 "미리보기용 예시 결과" 안내가 뜬다(`source: 'mock'`).
+  - (예전) 결과 값은 입력과 무관한 고정 목업(`mocks/chart.ts`)이었다. 지금 목업은 개발용 닉네임 장면에서만 쓴다.
 - 완료 (2026-10-18): **결과 화면 구조** — 작가 납품 즉시 실제 계산으로 바꿀 수 있게 준비했다.
   - `ChartSummary` = `source` + `contentOrigin`('ai-draft' | 'writer') + 태양/달/상승궁 `Placement`(별자리·도수 + 해석 문구) + `elements: ElementSummary`(`percentages`, `view`, `excluded`). 예전 `elementComment`(문자열 하나)·`dominantElement`는 없앴다.
   - `ElementSummaryView`: `{ kind: 'balanced', text }` 또는 `{ kind: 'leaning', strong: { elements, comment }, lacking: [{ element, text }…] }`. `toElementSummaryView`가 `commentPlan`에 문구를 채운다.
   - 조립은 한 곳: `buildChartSummary({ source, bigThree, balance, content })`. 목업도 실제 계산과 같은 경로(`computeElementBalanceFromSigns` → `buildChartSummary`)를 지난다. 실제 연결 때는 `/api/chart`의 `positions`(태양·달·상승궁)와 `elementBalance`를 넘기기만 하면 된다.
   - 원소 UI(`ElementBalance`): 제목은 서비스 템플릿(`elementTitles`, 조사는 `lib/text/korean`) — "가장 강한 원소는 💧 물이에요" / "🔥 불과 🌿 흙이 똑같이 강해요" / "🌿 흙, 🍃 바람과 💧 물이 적은 편이에요" / "네 원소가 고르게 섞여 있어요". 적은 편 코멘트는 차례로 이어 붙인다. 시간 모름이면 "상승궁과 천정(MC)은 빼고 계산했어요" 안내 + `/onboarding?step=time` 링크.
   - 상단 안내(`PreviewNotice`): 목업이면 "미리보기용 예시 결과", 실제 계산이지만 문구가 AI 초안이면 "해석 문구는 검수 전 임시 문구". 둘 다 아니면 숨는다.
-  - **목업 장면 (개발용 닉네임)**: `!balanced`(균형형), `!tie`(불·흙 동점, 태양이 있는 흙 코멘트, 물 적음), `!lacking0`(적은 편 없음), `!lacking3`(적은 편 3개), 그 밖은 기본(물 강함·바람 적음). 출생 시간 모름으로 입력하면 상승궁·MC를 빼고 계산한다. `!error`는 그대로 에러 화면.
+  - **목업 장면 (개발용 닉네임, 운영에서는 동작하지 않음 — `MOCK_SCENES_AVAILABLE`)**: `!mock`(기본: 물 강함·바람 적음), `!balanced`(균형형), `!tie`(불·흙 동점, 태양이 있는 흙 코멘트, 물 적음), `!lacking0`(적은 편 없음), `!lacking3`(적은 편 3개). 그 밖의 닉네임은 실제 계산. 출생 시간 모름으로 입력하면 상승궁·MC를 빼고 계산한다. `!error`는 에러 화면(무료 결과·심화 리포트 모두 개발 환경에서만).
   - 브라우저 확인(375px): 다섯 장면 + 시간 모름 모두 의도대로, 가로 넘침·콘솔 오류 없음. AI 초안의 적은 편 코멘트가 제목("○○이 적은 편이에요")을 되풀이해 이어 붙이면 반복처럼 보이는 문제를 찾아 작가 안내(`docs/content-brief-elements.md`)에 "제목과 겹치지 않게"를 추가했다.
 - 완료 (2026-11-03, `feat/paid-report`): **정밀 차트 `/report`** — 실제 계산(`/api/chart`) 결과를 보여준다. 처음에는 유료(잠금 화면)로 만들었지만 같은 날 **무료로 바꿨다**(아래 '리포트 상품 구조').
   - 진입: `/result` 맨 아래 `ReportTeaser`("정밀 차트 보기 · 무료") → `/report`. 상태: 로딩(Skeleton) / 빈 상태(입력 없음) / 에러(재시도·다시 입력) / 성공. 맨 아래 `DeepReportTeaser` → `/report/deep`.
@@ -137,6 +137,11 @@ src/
   - 해설은 입력과 무관한 목업(`mocks/deepReport.ts`, `source: 'mock'`; 위치·각도는 서울 1995-08-23 06:40 실제 계산값, 해설·차트 파워 점수는 손으로 쓴 예시)이고 화면 맨 위에 그렇게 안내한다. AI 생성은 사용자가 해석 규칙 문서를 정리한 뒤 다시 논의한다. 차트 파워 TOP 3 계산은 10번이 정해지기 전에는 만들지 않는다.
   - 조사 `lib/text/korean`에 '아/야'·'이야/야'가 있다(시안 C용으로 더했고, 지금은 쓰는 곳이 없다).
   - 브라우저 확인(375px): 정밀 차트에 잠금 없음·심화 안내 카드, 상품 고르기 → 한 장 열기(1/4, 잠금 카드 3개, 묶음 안내) → 묶음(4/4, 묶음 안내 사라짐) → 근거 보기 → 구매 기록 지우기(상품 고르기로), `!error` 에러·재시도, 빈 상태 — 가로 넘침·콘솔 오류 없음.
+- 완료 (2026-11-10, `feat/public-launch`): **공개 배포 준비** — 사용자 결정: 무료 버전(입력·무료 결과·정밀 차트)을 포트폴리오용으로 먼저 공개하고 유료(심화 리포트)는 나중에 업데이트한다. 심화 리포트 화면은 운영에서 '결제 준비 중' + 예시 리포트 안내로 그대로 둔다.
+  - `/result`를 실제 계산에 연결했다(사용자 결정: 문구 검수 전이라도 연결, 화면에 "해석 문구는 검수 전 임시 문구" 안내). `chartService.getChartSummary(input, signal)` → `services/chartApi.requestChart`(POST /api/chart + 응답 타입 가드, 정밀 차트의 `reportService`와 공용) → `buildComputedChartSummary`(`lib/summary/buildChartSummary.ts`, 태양·달은 `positions.bodies`, 상승궁은 `positions.angles?.ascendant`, 원소는 `elementBalance`). `useChartResult`는 AbortController로 요청을 취소한다.
+  - 라이선스: AGPL-3.0-or-later(1번 A안). 루트 `LICENSE`(gnu.org 원문), `package.json`의 `license`, `README.md`(포트폴리오 소개·실행·라이선스), 모든 화면 아래 `components/ui/SiteFooter`(개인 포트폴리오 프로젝트 · 소스 코드(AGPL-3.0) · 행성 계산: Swiss Ephemeris).
+  - 배포: Vercel(Hobby, 상업적 이용 불가 — 유료를 열 때 유료 플랜으로 옮긴다). `swisseph-v2` 네이티브 모듈이 Vercel(Linux)에서 빌드되는지 첫 배포로 확인한다.
+  - 브라우저 확인(375px): 서울 1995-08-23 06:40 → 사자 29°·게자리·처녀자리 상승, 원소 29·29·19·23%(API와 같음), 시간 모름(상승궁 잠금, 25·33·13·29%), `!balanced` 장면, 푸터 링크 — 가로 넘침·콘솔 오류 없음.
 - 동료 미리보기: `cloudflared` 임시 터널(`cloudflared tunnel --url http://localhost:3000`, 주소 `*.trycloudflare.com`은 켤 때마다 바뀜)로 개발 서버를 보여준다. `next.config.ts`의 `allowedDevOrigins: ["*.trycloudflare.com"]`가 있어야 개발 서버가 터널 주소의 요청을 받는다. PC와 개발 서버가 켜져 있는 동안만 열린다.
 - 완료: `/onboarding` 재방문 시 저장된 값으로 폼을 채운다. `?step=time`처럼 단계를 지정해 들어올 수 있다(상승궁 잠금 카드의 링크가 사용). URL 해시는 클라이언트 이동 시 첫 렌더 뒤에 반영되므로 쓰지 않는다.
 - `prefers-reduced-motion`: CSS 애니메이션은 `globals.css`, framer-motion은 `MotionProvider`(`MotionConfig reducedMotion="user"`)가 처리한다.
@@ -156,8 +161,8 @@ src/
 ## 저장소 (git)
 
 - 2026-10-17 시작. 첫 커밋 `4e2d492`(main).
-- 원격 (2026-11-03): GitHub **비공개** 저장소 `earlgreyxl1-prog/stardiary-app`(`origin`, https). 공개로 바꾸지 않는다(Swiss Ephemeris 라이선스 미결, 1번). GitHub CLI는 winget으로 설치했고(`C:\Program Files\GitHub CLI\gh.exe`, 새 터미널부터 PATH에 잡힘) `earlgreyxl1-prog` 계정으로 로그인돼 있다. 푸시도 커밋과 마찬가지로 사용자가 요청할 때만 한다.
-- 커밋 작성자는 이 저장소에만 설정했다(`git config user.name earlgreyxl1`, `user.email (개인 메일)`). 전역 git 설정은 건드리지 않았다.
+- 원격 (2026-11-03): GitHub 저장소 `earlgreyxl1-prog/stardiary-app`(`origin`, https). 2026-11-10 AGPL 채택(1번)과 함께 **공개로 전환**하기로 했다. 화면 맨 아래 `SiteFooter`가 이 주소를 소스 코드 링크로 보여준다(`SOURCE_REPOSITORY_URL`). GitHub CLI는 winget으로 설치했고(`C:\Program Files\GitHub CLI\gh.exe`, 새 터미널부터 PATH에 잡힘) `earlgreyxl1-prog` 계정으로 로그인돼 있다. 푸시도 커밋과 마찬가지로 사용자가 요청할 때만 한다.
+- 커밋 작성자는 이 저장소에만 설정했다(`git config user.name earlgreyxl1`, `user.email`은 사용자 개인 메일). 전역 git 설정은 건드리지 않았다. 공개 저장소이므로 메일 주소를 파일에 적지 않는다.
 - 작업은 브랜치에서 하고 main에 합친다. 커밋·푸시는 사용자가 요청할 때만 한다.
 - 포함하는 것: 소스, `scripts/`, `docs/`, `.claude/launch.json`, 생성 데이터 `data/world-cities.geonames.json`(약 23MB, 사용자 결정: 배포·다른 PC에서 바로 동작하도록 커밋). 데이터를 다시 만들 때마다 저장소가 약 23MB씩 커지므로 자주 다시 만들지 않는다.
 - 빼는 것(`.gitignore`): `node_modules`, `.next`, `.env*`, `*.pem`, `*.tsbuildinfo`, `next-env.d.ts`, `/.claude/settings.local.json`(개인 권한 설정).
@@ -169,7 +174,7 @@ src/
 
 - 실행: `npm test`(한 번) / `npm run test:watch`(감시). 설정은 `vitest.config.mts`: `@/` 별칭, `server-only`를 빈 모듈(`test/stubs/server-only.ts`)로 바꿔 서버 코드를 Node에서 직접 테스트한다. 테스트 파일은 `src/**/*.test.ts`(대상 파일 옆).
 - `@types/node`를 ^24로 올렸다(vitest 5가 22 이상을 요구, 실제 Node도 24).
-- 범위 (405개, 결과 화면 구조 작업으로 35개, 유료 리포트로 24개, 달토리 조사로 1개, 심화 리포트 상품으로 6개 추가):
+- 범위 (407개, 결과 화면 구조 작업으로 35개, 유료 리포트로 24개, 달토리 조사로 1개, 심화 리포트 상품으로 6개, 무료 결과 실제 계산 연결로 2개 추가):
   - `lib/deepReport/products.test.ts` — 주제·묶음이 여는 장, 상품과 목업 장의 제목 일치, 정렬·중복 제거, 구매 기록 파싱(잘못된 형식은 빈 목록), 산 장만 남기기
   - `lib/astro/aspects.test.ts` — 각도 거리(0/360 경계), 종류별 orb와 해·달 가산 경계값, 한 쌍에 하나만, 정렬, 실제 차트
   - `lib/report/report.test.ts` — 조사 자리표시자, 모든 천체×별자리×하우스·애스펙트 문구 조립(빈 자리표시자 없음), 시간 앎/모름/트롬쇠 리포트, 휠 각도·기호 벌리기
@@ -207,6 +212,8 @@ src/
      - B. 상용(Professional) 라이선스: Astrodienst와 계약한다. 가격·적용 범위는 안내 페이지에 없어 확인하지 못했다 → 구매 페이지 또는 order@astro.com에서 확인한다.
      - C. MIT 라이선스 라이브러리로 교체: `astronomy-engine`(MIT, 태양~명왕성, 정확도 ±1 arcminute ≈ 0.017°). 트로피컬 황경 변환 지원 여부와 상승궁·하우스 계산은 확인하지 못했으므로 직접 구현·검증이 필요하다. 별자리 경계 근처 오차를 기존 검증 기준(0.015°)과 비교해 본다.
      - 지금 할 일: 개발은 계속한다. 계산을 `lib/astro/engine` 어댑터 뒤에 가둔 구조를 유지하고, Swiss Ephemeris 타입이 어댑터 밖으로 새지 않게 한다. 상용 라이선스 가격 문의 메일을 미리 보낸다.
+     - ✅ **결정 (2026-11-10): A. AGPL** — 포트폴리오 공개 배포를 위해 프로젝트 전체를 AGPL-3.0-or-later로 공개한다(저장소 공개 + 화면 아래 소스 링크). 유료 버전을 열 때 소스 공개를 원하지 않으면 그때 B(상용 라이선스)로 바꾼다.
+     - 확인 필요: `swisseph-v2`의 LICENSE 파일은 GPL v2 원문인데 README는 "라이선스는 Swiss Ephemeris와 같다"고 적는다. AGPL과 함께 써도 되는지 사용자가 직접 확인하기로 했다.
      - 이 정리는 법률 자문이 아니다. 출시 전에 라이선스 해석을 직접 확인한다.
 2. ✅ **도시 검색 / 지오코딩 (2026-10-17 결정)**: 외부 지오코딩 API 대신 **GeoNames 정적 데이터 + 서버 검색 API** (`GET /api/geocode?q=`).
    - 데이터: `data/world-cities.geonames.json` (약 23MB, 242,892행) — GeoNames cities500(인구 500명 이상 또는 행정 중심지) 236,278개 도시 + 국내 행정구역. 246개 국가·지역, 394개 IANA 타임존(전부 Luxon에서 열림), 위도 54.9°S~78.2°N. 행마다 `kind`(city / admin / extra). 만드는 법(원본 다운로드 포함)은 `scripts/build-world-cities.ts` 머리말(`--kr KR.txt` 필수). 생성물이라 저장소에 넣을지는 git을 붙일 때 정한다.
@@ -297,7 +304,7 @@ src/
 
 ## 다음 작업 후보
 
-- 문구 검수(8번) 후: 편집 엑셀을 CSV로 저장해 `scripts/convert-content.ts`로 변환하고, `chartService.getChartSummary()`가 `/api/chart`를 호출해 `positions`(태양·달·상승궁)와 `elementBalance`를 `buildChartSummary`에 넘기도록 바꾼다(`source: 'computed'`). 화면 구조는 이미 준비돼 있다(2026-10-18).
+- 문구 검수(8번): 편집 엑셀을 CSV로 저장해 `scripts/convert-content.ts`로 변환한다. `/result`는 이미 실제 계산에 연결돼 있어(2026-11-10) 변환만 하면 "검수 전 임시 문구" 안내가 사라진다.
 - 결과 카드 공유(이미지 저장) 기능
 - 심화 리포트 후속: 가격·결제·로그인(서버에서 구매 확인), 해석 규칙 문서(사용자 작성) → AI 생성(산 장만 생성·저장), 차트 파워(10번)
 - 정밀 차트 후속: 문구 검수 경로(엑셀·변환), 하우스 대체 시 안내 문구 다듬기

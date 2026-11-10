@@ -1,12 +1,14 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { FREE_STAGE_CONTENT } from '@/content/freeStage';
-import { computeElementBalanceFromSigns } from '@/lib/astro/elements';
+import { ASPECT_BODIES, findAspects } from '@/lib/astro/aspects';
+import { computeElementBalance, computeElementBalanceFromSigns } from '@/lib/astro/elements';
+import { computeNatalPositions } from '@/lib/astro/engine';
 import { longitudeToSign } from '@/lib/astro/zodiac';
-import { buildChartSummary, toElementSummaryView } from '@/lib/summary/buildChartSummary';
+import { buildChartSummary, buildComputedChartSummary, toElementSummaryView } from '@/lib/summary/buildChartSummary';
 import { elementTitles } from '@/lib/summary/elementTitles';
-import { MOCK_CHARTS, pickMockChart, type MockChartId } from '@/mocks/chart';
+import { findMockChart, MOCK_CHARTS, type MockChartId } from '@/mocks/chart';
 import { getChartSummary } from '@/services/chartService';
-import type { ElementPointSource, ZodiacSignId } from '@/types/astro';
+import type { BodyId, ChartApiResponse, ElementPointSource, ZodiacSignId } from '@/types/astro';
 import type { BirthInput } from '@/types/birth';
 
 const balanceOf = (id: MockChartId, timeUnknown = false) => {
@@ -34,10 +36,11 @@ describe('목업 장면이 의도한 화면 상태를 만든다', () => {
     }
   });
 
-  it('닉네임으로 장면을 고른다', () => {
-    expect(pickMockChart('!balanced')).toBe('balanced');
-    expect(pickMockChart(' !tie ')).toBe('tie');
-    expect(pickMockChart('별이')).toBe('default');
+  it('닉네임으로 장면을 고르고, 목업 닉네임이 아니면 null(실제 계산)', () => {
+    expect(findMockChart('!balanced')).toBe('balanced');
+    expect(findMockChart(' !tie ')).toBe('tie');
+    expect(findMockChart('!mock')).toBe('default');
+    expect(findMockChart('별이')).toBeNull();
   });
 });
 
@@ -90,6 +93,44 @@ describe('buildChartSummary', () => {
   });
 });
 
+describe('buildComputedChartSummary (실제 계산 → 결과 화면)', () => {
+  const seoul = { id: 'seoul', nameKo: '서울', nameEn: 'Seoul', country: '대한민국', countryCode: 'KR', latitude: 37.5665, longitude: 126.978, timezone: 'Asia/Seoul' };
+  const chartFor = (input: BirthInput): ChartApiResponse => {
+    const positions = computeNatalPositions(input);
+    const longitudes = Object.fromEntries(ASPECT_BODIES.map((body) => [body, positions.bodies[body].longitude])) as Record<BodyId, number>;
+    return { positions, elementBalance: computeElementBalance(positions), aspects: findAspects(longitudes) };
+  };
+  const birth = (overrides: Partial<BirthInput> = {}): BirthInput => ({
+    nickname: '별이',
+    year: 1995,
+    month: 8,
+    day: 23,
+    hour: 6,
+    minute: 40,
+    timeUnknown: false,
+    city: seoul,
+    ...overrides,
+  });
+
+  it('태양·달·상승궁을 계산 결과에서 가져오고 source는 computed', () => {
+    const chart = chartFor(birth());
+    const summary = buildComputedChartSummary(chart, FREE_STAGE_CONTENT);
+    expect(summary.source).toBe('computed');
+    expect(summary.sun.sign).toBe(chart.positions.bodies.sun.sign);
+    expect(summary.sun.degree).toBeCloseTo(chart.positions.bodies.sun.degree, 9);
+    expect(summary.moon.sign).toBe(chart.positions.bodies.moon.sign);
+    expect(summary.rising?.sign).toBe(chart.positions.angles?.ascendant.sign);
+    expect(summary.elements.percentages).toEqual(chart.elementBalance.percentages);
+    expect(summary.sun.headline).toBe(FREE_STAGE_CONTENT.placements.sun[summary.sun.sign].headline);
+  });
+
+  it('출생 시간을 모르면 상승궁 null, 원소는 상승궁·MC 빼고', () => {
+    const summary = buildComputedChartSummary(chartFor(birth({ hour: null, minute: null, timeUnknown: true })), FREE_STAGE_CONTENT);
+    expect(summary.rising).toBeNull();
+    expect(summary.elements.excluded).toEqual(['ascendant', 'midheaven']);
+  });
+});
+
 describe('elementTitles (서비스가 만드는 제목)', () => {
   const titlesOf = (id: MockChartId) => elementTitles(toElementSummaryView(balanceOf(id), FREE_STAGE_CONTENT));
 
@@ -111,7 +152,7 @@ describe('elementTitles (서비스가 만드는 제목)', () => {
   });
 });
 
-describe('chartService.getChartSummary (목업)', () => {
+describe('chartService.getChartSummary (개발용 목업 닉네임)', () => {
   afterEach(() => {
     vi.useRealTimers();
   });
@@ -135,8 +176,8 @@ describe('chartService.getChartSummary (목업)', () => {
     return promise;
   };
 
-  it('시간 모름이면 상승궁 null, 원소는 상승궁·MC 빼고', async () => {
-    const summary = await run({ hour: null, minute: null, timeUnknown: true });
+  it('!mock + 시간 모름이면 상승궁 null, 원소는 상승궁·MC 빼고', async () => {
+    const summary = await run({ nickname: '!mock', hour: null, minute: null, timeUnknown: true });
     expect(summary.source).toBe('mock');
     expect(summary.rising).toBeNull();
     expect(summary.elements.excluded).toEqual(['ascendant', 'midheaven']);

@@ -1,5 +1,6 @@
 import type {
   BigThreeKey,
+  ChartApiResponse,
   ChartSummary,
   ElementBalance,
   ElementCommentText,
@@ -68,4 +69,15 @@ export function buildChartSummary({ source, bigThree, balance, content }: BuildC
       excluded: balance.excluded,
     },
   };
+}
+
+/** 실제 계산(/api/chart 응답)으로 결과 화면용 ChartSummary를 만든다. 출생 시간을 모르면 angles가 null이라 상승궁도 null이다. */
+export function buildComputedChartSummary(chart: ChartApiResponse, content: FreeStageContent): ChartSummary {
+  const { bodies, angles } = chart.positions;
+  return buildChartSummary({
+    source: 'computed',
+    bigThree: { sun: bodies.sun, moon: bodies.moon, rising: angles?.ascendant ?? null },
+    balance: chart.elementBalance,
+    content,
+  });
 }

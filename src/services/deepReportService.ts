@@ -4,7 +4,7 @@ import type { BirthInput } from '@/types/birth';
 import type { DeepChapterId, DeepReport } from '@/types/deepReport';
 
 const MOCK_LATENCY_MS = 900;
-/** 에러 UI를 확인하기 위한 목업 전용 입력값(무료 결과와 같은 닉네임) */
+/** 에러 UI를 확인하기 위한 개발용 입력값(무료 결과와 같은 닉네임). 운영에서는 동작하지 않는다. */
 const MOCK_FAILURE_NICKNAME = '!error';
 
 export class DeepReportError extends Error {
@@ -42,6 +42,6 @@ export async function getDeepReport(
   signal?: AbortSignal,
 ): Promise<DeepReport> {
   await wait(MOCK_LATENCY_MS, signal);
-  if (input.nickname.trim() === MOCK_FAILURE_NICKNAME) throw new DeepReportError();
+  if (process.env.NODE_ENV !== 'production' && input.nickname.trim() === MOCK_FAILURE_NICKNAME) throw new DeepReportError();
   return pickOwnedChapters(MOCK_DEEP_REPORT, owned);
 }
