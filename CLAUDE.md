@@ -144,7 +144,7 @@ src/
     - 네이티브 모듈 함정 두 가지(첫 배포에서 `/api/chart`가 500): ① 새 npm은 의존성의 install 스크립트를 허용 목록에 있을 때만 돌린다 → `package.json`의 `allowScripts`에 `swisseph-v2@1.1.0`(버전까지 고정이라 swisseph-v2를 올리면 같이 고친다. `npm install-scripts approve swisseph-v2`). ② `swisseph-v2`가 `__dirname + '/../build/Release/swisseph.node'`로 불러와 파일 추적이 못 찾는다 → `next.config.ts`의 `outputFileTracingIncludes["/api/**/*"]`에 `swisseph.node`를 넣었다(Vercel이 API 라우트를 한 함수로 묶기도 해서 /api 전체).
     - 빌드 캐시가 예전 `node_modules`를 되살리면 install 스크립트가 다시 돌지 않는다. 네이티브 모듈 설정을 바꾼 뒤에는 `vercel deploy --prod --force`.
     - 운영 확인: 서울 1995-08-23 06:40 → 사자 29.321°·처녀 상승·원소 29·29·19·23%·애스펙트 21개(로컬과 같음), 시간 모름(angles null, 25·33·13·29%), 트롬쇠 Porphyry, 375px에서 /result·/report·/report/deep(개발용 버튼 없음, 구매 버튼 비활성) 가로 넘침·콘솔 오류 없음.
-    - GitHub 자동 배포(푸시하면 배포)는 아직 없다: `vercel link` 때 저장소 연결이 실패했다(Vercel GitHub 앱이 설치되지 않음). 연결 전까지는 푸시와 별개로 CLI로 배포한다. AGPL상 배포된 코드와 공개 저장소가 같아야 하므로 배포한 커밋은 main에 올린다.
+    - GitHub 자동 배포 (2026-11-10 연결): 사용자가 Vercel GitHub 앱을 stardiary-app 저장소에만 설치했고 `vercel git connect`로 연결했다. **main에 푸시하면 운영 배포**, 다른 브랜치를 푸시하면 미리보기 배포가 된다. 그래서 main 푸시는 곧 공개 배포다 — 커밋·푸시는 지금처럼 사용자가 요청할 때만 한다. AGPL상 배포된 코드와 공개 저장소가 같아야 하므로 CLI로 따로 배포하지 말고 main 푸시로 배포한다.
   - 브라우저 확인(375px): 서울 1995-08-23 06:40 → 사자 29°·게자리·처녀자리 상승, 원소 29·29·19·23%(API와 같음), 시간 모름(상승궁 잠금, 25·33·13·29%), `!balanced` 장면, 푸터 링크 — 가로 넘침·콘솔 오류 없음.
 - 동료 미리보기: `cloudflared` 임시 터널(`cloudflared tunnel --url http://localhost:3000`, 주소 `*.trycloudflare.com`은 켤 때마다 바뀜)로 개발 서버를 보여준다. `next.config.ts`의 `allowedDevOrigins: ["*.trycloudflare.com"]`가 있어야 개발 서버가 터널 주소의 요청을 받는다. PC와 개발 서버가 켜져 있는 동안만 열린다.
 - 완료: `/onboarding` 재방문 시 저장된 값으로 폼을 채운다. `?step=time`처럼 단계를 지정해 들어올 수 있다(상승궁 잠금 카드의 링크가 사용). URL 해시는 클라이언트 이동 시 첫 렌더 뒤에 반영되므로 쓰지 않는다.
