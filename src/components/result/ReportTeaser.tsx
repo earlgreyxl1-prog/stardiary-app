@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ChevronRight, Orbit } from 'lucide-react';
 
-/** 무료 결과 화면 아래의 정밀 차트 안내 카드. 정밀 차트도 무료다. */
+/** 무료 결과 화면 아래의 네이탈(정밀) 차트 안내 카드. 정밀 차트도 무료다. */
 export function ReportTeaser() {
   return (
     <Link
@@ -13,7 +13,7 @@ export function ReportTeaser() {
       </span>
       <span className="min-w-0 flex-1">
         <span className="block font-bold text-white">
-          정밀 차트 보기
+          네이탈 차트 보러가기
           <span className="ml-1.5 rounded-full bg-white/15 px-2 py-0.5 align-middle text-[11px] font-medium text-[#ffe9a8]">무료</span>
         </span>
         <span className="mt-0.5 block text-xs leading-relaxed text-indigo-200/80">

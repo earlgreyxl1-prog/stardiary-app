@@ -116,7 +116,7 @@ src/
   - **목업 장면 (개발용 닉네임, 운영에서는 동작하지 않음 — `MOCK_SCENES_AVAILABLE`)**: `!mock`(기본: 물 강함·바람 적음), `!balanced`(균형형), `!tie`(불·흙 동점, 태양이 있는 흙 코멘트, 물 적음), `!lacking0`(적은 편 없음), `!lacking3`(적은 편 3개). 그 밖의 닉네임은 실제 계산. 출생 시간 모름으로 입력하면 상승궁·MC를 빼고 계산한다. `!error`는 에러 화면(무료 결과·심화 리포트 모두 개발 환경에서만).
   - 브라우저 확인(375px): 다섯 장면 + 시간 모름 모두 의도대로, 가로 넘침·콘솔 오류 없음. AI 초안의 적은 편 코멘트가 제목("○○이 적은 편이에요")을 되풀이해 이어 붙이면 반복처럼 보이는 문제를 찾아 작가 안내(`docs/content-brief-elements.md`)에 "제목과 겹치지 않게"를 추가했다.
 - 완료 (2026-11-03, `feat/paid-report`): **정밀 차트 `/report`** — 실제 계산(`/api/chart`) 결과를 보여준다. 처음에는 유료(잠금 화면)로 만들었지만 같은 날 **무료로 바꿨다**(아래 '리포트 상품 구조').
-  - 진입: `/result` 맨 아래 `ReportTeaser`("정밀 차트 보기 · 무료") → `/report`. 상태: 로딩(Skeleton) / 빈 상태(입력 없음) / 에러(재시도·다시 입력) / 성공. 맨 아래 `DeepReportTeaser` → `/report/deep`.
+  - 진입: `/result` 맨 아래 `ReportTeaser`("네이탈 차트 보러가기 · 무료", 2026-11-10 문구 변경) → `/report`. 상태: 로딩(Skeleton) / 빈 상태(입력 없음) / 에러(재시도·다시 입력) / 성공. 맨 아래 `DeepReportTeaser`는 **잠긴 카드**(2026-11-10 사용자 결정: "아직 준비 중이에요" 배지, 링크 아님, 자물쇠). 심화 리포트를 열 때 `/report/deep` 링크로 되돌린다. 주소를 직접 치면 `/report/deep`은 그대로 열린다(운영에서는 구매 버튼 비활성).
   - 잠금 화면(`ReportPaywall`)과 `useReportAccess`는 무료 전환 때 지웠다.
   - `useNatalReport`: `reportService.getNatalReport()`(→ `/api/chart` → 응답 타입 가드 → `buildNatalReport`) 호출. settled-key 패턴 + AbortController.
   - 화면 순서: 머리("무료 정밀 차트", ASC·MC 도수) → AI 초안 안내 → 시간 모름 안내(+ `/onboarding?step=time`) → 휠 차트 → 행성 10개(별자리·도수·하우스·역행·문구, 시간 모름이면 그날 별자리가 바뀐 천체에 안내) → 12하우스(시작선·들어 있는 행성·인터셉션, Porphyry/Whole Sign 대체 배지, 시간 모름이면 잠금 안내) → 애스펙트(정확도 순 상위 8개 + "모두 보기").
