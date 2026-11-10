@@ -140,7 +140,11 @@ src/
 - 완료 (2026-11-10, `feat/public-launch`): **공개 배포 준비** — 사용자 결정: 무료 버전(입력·무료 결과·정밀 차트)을 포트폴리오용으로 먼저 공개하고 유료(심화 리포트)는 나중에 업데이트한다. 심화 리포트 화면은 운영에서 '결제 준비 중' + 예시 리포트 안내로 그대로 둔다.
   - `/result`를 실제 계산에 연결했다(사용자 결정: 문구 검수 전이라도 연결, 화면에 "해석 문구는 검수 전 임시 문구" 안내). `chartService.getChartSummary(input, signal)` → `services/chartApi.requestChart`(POST /api/chart + 응답 타입 가드, 정밀 차트의 `reportService`와 공용) → `buildComputedChartSummary`(`lib/summary/buildChartSummary.ts`, 태양·달은 `positions.bodies`, 상승궁은 `positions.angles?.ascendant`, 원소는 `elementBalance`). `useChartResult`는 AbortController로 요청을 취소한다.
   - 라이선스: AGPL-3.0-or-later(1번 A안). 루트 `LICENSE`(gnu.org 원문), `package.json`의 `license`, `README.md`(포트폴리오 소개·실행·라이선스), 모든 화면 아래 `components/ui/SiteFooter`(개인 포트폴리오 프로젝트 · 소스 코드(AGPL-3.0) · 행성 계산: Swiss Ephemeris).
-  - 배포: Vercel(Hobby, 상업적 이용 불가 — 유료를 열 때 유료 플랜으로 옮긴다). `swisseph-v2` 네이티브 모듈이 Vercel(Linux)에서 빌드되는지 첫 배포로 확인한다.
+  - **배포 (2026-11-10): Vercel** — https://stardiary-app.vercel.app (Hobby, 상업적 이용 불가 — 유료를 열 때 유료 플랜으로 옮긴다). 프로젝트 `stardiary-app`(계정 `earlgreyxl1-prog`), 함수 지역 icn1(서울), 빌드는 iad1. Vercel CLI(`npm i -g vercel`, 로그인됨)로 `vercel deploy --prod`를 돌린다. `.vercel/`·`.env.local`(Vercel이 만든 OIDC 토큰)은 커밋하지 않는다.
+    - 네이티브 모듈 함정 두 가지(첫 배포에서 `/api/chart`가 500): ① 새 npm은 의존성의 install 스크립트를 허용 목록에 있을 때만 돌린다 → `package.json`의 `allowScripts`에 `swisseph-v2@1.1.0`(버전까지 고정이라 swisseph-v2를 올리면 같이 고친다. `npm install-scripts approve swisseph-v2`). ② `swisseph-v2`가 `__dirname + '/../build/Release/swisseph.node'`로 불러와 파일 추적이 못 찾는다 → `next.config.ts`의 `outputFileTracingIncludes["/api/**/*"]`에 `swisseph.node`를 넣었다(Vercel이 API 라우트를 한 함수로 묶기도 해서 /api 전체).
+    - 빌드 캐시가 예전 `node_modules`를 되살리면 install 스크립트가 다시 돌지 않는다. 네이티브 모듈 설정을 바꾼 뒤에는 `vercel deploy --prod --force`.
+    - 운영 확인: 서울 1995-08-23 06:40 → 사자 29.321°·처녀 상승·원소 29·29·19·23%·애스펙트 21개(로컬과 같음), 시간 모름(angles null, 25·33·13·29%), 트롬쇠 Porphyry, 375px에서 /result·/report·/report/deep(개발용 버튼 없음, 구매 버튼 비활성) 가로 넘침·콘솔 오류 없음.
+    - GitHub 자동 배포(푸시하면 배포)는 아직 없다: `vercel link` 때 저장소 연결이 실패했다(Vercel GitHub 앱이 설치되지 않음). 연결 전까지는 푸시와 별개로 CLI로 배포한다. AGPL상 배포된 코드와 공개 저장소가 같아야 하므로 배포한 커밋은 main에 올린다.
   - 브라우저 확인(375px): 서울 1995-08-23 06:40 → 사자 29°·게자리·처녀자리 상승, 원소 29·29·19·23%(API와 같음), 시간 모름(상승궁 잠금, 25·33·13·29%), `!balanced` 장면, 푸터 링크 — 가로 넘침·콘솔 오류 없음.
 - 동료 미리보기: `cloudflared` 임시 터널(`cloudflared tunnel --url http://localhost:3000`, 주소 `*.trycloudflare.com`은 켤 때마다 바뀜)로 개발 서버를 보여준다. `next.config.ts`의 `allowedDevOrigins: ["*.trycloudflare.com"]`가 있어야 개발 서버가 터널 주소의 요청을 받는다. PC와 개발 서버가 켜져 있는 동안만 열린다.
 - 완료: `/onboarding` 재방문 시 저장된 값으로 폼을 채운다. `?step=time`처럼 단계를 지정해 들어올 수 있다(상승궁 잠금 카드의 링크가 사용). URL 해시는 클라이언트 이동 시 첫 렌더 뒤에 반영되므로 쓰지 않는다.
@@ -160,7 +164,7 @@ src/
 
 ## 저장소 (git)
 
-- 2026-10-17 시작. 첫 커밋 `4e2d492`(main).
+- 2026-10-17 시작. 2026-11-10 공개 전환 때 모든 커밋의 작성자 메일을 GitHub noreply(`351936870+earlgreyxl1-prog@users.noreply.github.com`, 이 저장소 `user.email`)로 바꾸고 예전 CLAUDE.md의 개인 메일을 지우느라 **기록을 다시 썼다**(강제 푸시). 그래서 이 문서의 예전 커밋 번호(`4e2d492`, `64ee497` 등)는 지금 저장소에 없다.
 - 원격 (2026-11-03): GitHub 저장소 `earlgreyxl1-prog/stardiary-app`(`origin`, https). 2026-11-10 AGPL 채택(1번)과 함께 **공개로 전환**하기로 했다. 화면 맨 아래 `SiteFooter`가 이 주소를 소스 코드 링크로 보여준다(`SOURCE_REPOSITORY_URL`). GitHub CLI는 winget으로 설치했고(`C:\Program Files\GitHub CLI\gh.exe`, 새 터미널부터 PATH에 잡힘) `earlgreyxl1-prog` 계정으로 로그인돼 있다. 푸시도 커밋과 마찬가지로 사용자가 요청할 때만 한다.
 - 커밋 작성자는 이 저장소에만 설정했다(`git config user.name earlgreyxl1`, `user.email`은 사용자 개인 메일). 전역 git 설정은 건드리지 않았다. 공개 저장소이므로 메일 주소를 파일에 적지 않는다.
 - 작업은 브랜치에서 하고 main에 합친다. 커밋·푸시는 사용자가 요청할 때만 한다.
